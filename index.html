@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>저니 시리즈</title>
+<style>
+  :root{
+    --ink-950:#0A1120;
+    --ink-900:#111A2E;
+    --ink-850:#16223A;
+    --paper:#F1E7C9;
+    --paper-dim:#B7AD8C;
+    --gold:#D9B94A;
+    --gold-soft:#8C7A3E;
+    --line: rgba(241,231,201,0.14);
+    --line-strong: rgba(241,231,201,0.28);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ink-950);color:var(--paper);
+    font-family:"Noto Sans KR", system-ui, sans-serif;
+    min-height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    padding:24px;
+  }
+  .serif{font-family:"Noto Serif KR", serif;}
+  .wrap{max-width:640px;width:100%;text-align:center;}
+  .eyebrow{
+    font-size:12px;letter-spacing:0.32em;color:var(--gold-soft);
+    text-transform:uppercase;margin-bottom:14px;
+  }
+  h1{font-size:clamp(30px,6vw,44px);margin:0 0 12px;color:var(--paper);}
+  p.lead{color:var(--paper-dim);font-size:15px;max-width:44ch;margin:0 auto 40px;}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media (max-width:560px){ .cards{grid-template-columns:1fr;} }
+  a.card{
+    display:block;text-decoration:none;color:inherit;
+    background:linear-gradient(180deg, var(--ink-900), var(--ink-850));
+    border:1px solid var(--line);border-radius:16px;
+    padding:28px 20px;
+    transition:border-color .25s ease, transform .25s ease;
+  }
+  a.card:hover{border-color:var(--gold-soft);transform:translateY(-2px);}
+  .card-kicker{font-size:11px;letter-spacing:0.18em;color:var(--gold-soft);text-transform:uppercase;margin-bottom:8px;}
+  .card-title{font-size:22px;color:var(--paper);margin-bottom:8px;}
+  .card-desc{font-size:13px;color:var(--paper-dim);line-height:1.6;}
+  footer{margin-top:40px;font-size:12px;color:var(--paper-dim);}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="eyebrow">Journey Series</div>
+    <h1 class="serif">저니 시리즈</h1>
+    <p class="lead">한 해의 감사에서 시작해 성탄의 기다림으로 이어지는 두 절기 웹 동반 페이지입니다.</p>
+    <div class="cards">
+      <a class="card" href="gratitude.html">
+        <div class="card-kicker">Gratitude</div>
+        <div class="card-title serif">감사 저니</div>
+        <div class="card-desc">추수감사절 매일 체크 + 감사빙고</div>
+      </a>
+      <a class="card" href="advent.html">
+        <div class="card-kicker">Advent</div>
+        <div class="card-title serif">대림절 저니</div>
+        <div class="card-desc">4주간 소망·평화·기쁨·사랑</div>
+      </a>
+    </div>
+    <footer>기독교교육리더십연구소</footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>감사 저니</title>
+<style>
+  :root{
+    --ink-950:#0A1120;
+    --ink-900:#111A2E;
+    --ink-850:#16223A;
+    --ink-800:#1D2C48;
+    --paper:#F1E7C9;
+    --paper-dim:#B7AD8C;
+    --gold:#D9B94A;
+    --gold-soft:#8C7A3E;
+    --love:#C9515C;
+    --line: rgba(241,231,201,0.14);
+    --line-strong: rgba(241,231,201,0.28);
+    --tier-surface:#C9A227;
+    --tier-daily:#B5651D;
+    --tier-being:#7A2E2E;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ink-950);
+    color:var(--paper);
+    font-family:"Noto Sans KR", system-ui, sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--gold);color:var(--ink-950);}
+
+  a{color:var(--gold);}
+  a:hover{color:#EAD27A;}
+
+  .serif{font-family:"Noto Serif KR", serif;}
+
+  h1,h2,h3{text-wrap:balance;margin:0;}
+
+  button{font-family:inherit;cursor:pointer;}
+  button:focus-visible, a:focus-visible, textarea:focus-visible{
+    outline:2px solid var(--gold);
+    outline-offset:3px;
+  }
+
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+
+  /* ---------- Starfield (harvest glow) ---------- */
+  .stars{
+    position:absolute;inset:0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 10% 20%, rgba(217,185,74,0.5) 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 80% 15%, rgba(241,231,201,0.4) 50%, transparent 51%),
+      radial-gradient(1px 1px at 60% 35%, rgba(217,185,74,0.45) 50%, transparent 51%),
+      radial-gradient(1px 1px at 30% 55%, rgba(241,231,201,0.35) 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 90% 60%, rgba(217,185,74,0.4) 50%, transparent 51%),
+      radial-gradient(1px 1px at 45% 80%, rgba(241,231,201,0.4) 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 15% 85%, rgba(217,185,74,0.45) 50%, transparent 51%),
+      radial-gradient(1px 1px at 70% 90%, rgba(241,231,201,0.35) 50%, transparent 51%);
+    opacity:0.9;
+    pointer-events:none;
+  }
+
+  /* ---------- Sticky progress bar ---------- */
+  .progress-bar{
+    position:sticky;top:0;z-index:20;
+    background:rgba(10,17,32,0.86);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .progress-inner{
+    max-width:1080px;margin:0 auto;padding:12px 24px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+  }
+  .progress-label{font-size:13px;color:var(--paper-dim);letter-spacing:0.02em;white-space:nowrap;}
+  .mini-days{display:flex;gap:8px;}
+  .mini-day{width:10px;height:10px;border-radius:50%;background:var(--ink-800);border:1px solid var(--line-strong);transition:background .3s ease, box-shadow .3s ease;}
+  .mini-day.lit{background:var(--gold);border-color:var(--gold);box-shadow:0 0 8px 1px rgba(217,185,74,0.7);}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    padding:88px 0 72px;
+    overflow:hidden;
+    border-bottom:1px solid var(--line);
+  }
+  .hero-inner{position:relative;z-index:1;text-align:center;display:flex;flex-direction:column;align-items:center;gap:18px;}
+  .eyebrow{
+    display:flex;align-items:center;gap:8px;
+    font-size:12px;letter-spacing:0.32em;color:var(--gold-soft);text-transform:uppercase;
+  }
+  .hero h1{
+    font-size:clamp(36px, 6vw, 56px);
+    font-weight:700;color:var(--paper);
+    letter-spacing:0.01em;
+  }
+  .hero p{
+    max-width:40ch;color:var(--paper-dim);font-size:16px;
+  }
+  .hero-hint{font-size:13px;color:var(--gold-soft);margin-top:8px;}
+
+  /* ---------- Shared ---------- */
+  .section-head{text-align:center;max-width:52ch;margin:0 auto 40px;}
+  .section-head .kicker{font-size:12px;letter-spacing:0.22em;color:var(--gold-soft);text-transform:uppercase;}
+  .section-head h2{font-size:26px;margin-top:8px;color:var(--paper);}
+  .section-note{text-align:center;max-width:56ch;margin:-24px auto 32px;color:var(--paper-dim);font-size:13px;}
+
+  .btn{
+    border:1px solid var(--line-strong);
+    background:transparent;
+    color:var(--paper);
+    padding:9px 18px;
+    border-radius:100px;
+    font-size:13px;
+    transition:background .2s ease, color .2s ease, border-color .2s ease;
+  }
+  .btn:hover{background:var(--paper);color:var(--ink-950);border-color:var(--paper);}
+  .btn.gold{border-color:var(--gold);color:var(--gold);}
+  .btn.gold:hover{background:var(--gold);color:var(--ink-950);}
+  .btn:disabled{opacity:.5;cursor:default;}
+  .btn:disabled:hover{background:transparent;color:var(--paper);border-color:var(--line-strong);}
+
+  /* ---------- Daily check section ---------- */
+  .daily-section{padding:64px 0 40px;}
+  .day-pillrow{display:flex;justify-content:center;gap:8px;margin-bottom:24px;flex-wrap:wrap;}
+  .day-pill{
+    position:relative;
+    min-width:42px;height:42px;padding:0 6px;border-radius:21px;
+    border:1.5px solid var(--line-strong);background:var(--ink-900);color:var(--paper-dim);
+    font-size:13px;display:flex;align-items:center;justify-content:center;
+    transition:all .2s ease;
+  }
+  .day-pill.active{border-color:var(--gold);color:var(--gold);}
+  .day-pill.done{background:var(--gold-soft);color:var(--ink-950);border-color:var(--gold-soft);}
+  .day-pill.gathering{border-style:dashed;}
+
+  .daily-card{
+    max-width:560px;margin:0 auto;
+    background:linear-gradient(180deg, var(--ink-900), var(--ink-850));
+    border:1px solid var(--line);border-radius:16px;
+    padding:26px 26px 24px;
+    text-align:center;
+  }
+  .daily-kind{font-size:11.5px;letter-spacing:0.08em;color:var(--gold-soft);text-transform:uppercase;margin-bottom:6px;}
+  .daily-date{font-size:12px;color:var(--paper-dim);margin-bottom:14px;}
+  .daily-prompt{font-size:15px;color:var(--paper);margin-bottom:14px;}
+  .daily-textarea{
+    width:100%;min-height:88px;resize:vertical;
+    background:var(--ink-950);color:var(--paper);
+    border:1px solid var(--line-strong);border-radius:10px;
+    padding:12px 14px;font-family:inherit;font-size:14px;line-height:1.6;
+  }
+  .daily-textarea::placeholder{color:var(--paper-dim);}
+  .daily-toggle{margin-top:18px;}
+
+  .gathering-title{font-size:17px;color:var(--paper);margin-bottom:8px;font-family:"Noto Serif KR", serif;}
+  .gathering-desc{font-size:13.5px;color:var(--paper-dim);margin-bottom:16px;}
+  .gathering-steps{
+    list-style:none;margin:0 0 20px;padding:0;
+    display:flex;flex-direction:column;gap:8px;
+    text-align:left;
+  }
+  .gathering-steps li{
+    display:flex;gap:10px;align-items:flex-start;
+    font-size:13.5px;color:var(--paper);
+    background:var(--ink-950);border:1px solid var(--line);border-radius:10px;
+    padding:10px 12px;
+  }
+  .gathering-steps .num{
+    flex:none;width:20px;height:20px;border-radius:50%;
+    background:var(--gold-soft);color:var(--ink-950);
+    font-size:11px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  /* ---------- Bingo ---------- */
+  .bingo-section{padding:56px 0 40px;}
+  .bingo-progress{
+    text-align:center;font-size:13px;color:var(--gold-soft);
+    margin:-22px 0 22px;letter-spacing:0.02em;
+  }
+  .bingo-grid{
+    max-width:460px;margin:0 auto;
+    display:grid;grid-template-columns:repeat(5, minmax(0,1fr));
+    gap:6px;
+    background:var(--ink-900);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:14px;
+  }
+  .bingo-cell{
+    position:relative;aspect-ratio:1;
+    border-radius:8px;
+    border:1px solid var(--line-strong);
+    background:var(--ink-850);
+    display:flex;align-items:center;justify-content:center;
+    padding:5px;text-align:center;
+    color:var(--paper-dim);
+    box-shadow: inset 3px 0 0 0 var(--tier-color, var(--gold));
+    transition:background .3s ease, border-color .3s ease, color .3s ease, transform .15s ease, box-shadow .3s ease;
+  }
+  .bingo-cell:hover{ transform:translateY(-1px); border-color:var(--paper-dim); }
+  .bingo-cell[data-tier="surface"]{ --tier-color: var(--tier-surface); }
+  .bingo-cell[data-tier="daily"]{ --tier-color: var(--tier-daily); }
+  .bingo-cell[data-tier="being"]{ --tier-color: var(--tier-being); }
+  .bingo-cell[data-tier="free"]{ --tier-color: var(--gold); }
+  .bingo-cell.done{
+    background:var(--tier-color, var(--gold));
+    border-color:var(--tier-color, var(--gold));
+    color:var(--ink-950);
+    box-shadow:none;
+  }
+  .bingo-cell-text{
+    font-size:10px;line-height:1.25;
+    display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .bingo-cell.free .bingo-cell-text{ font-weight:700; }
+  .bingo-check{
+    position:absolute;top:3px;right:3px;width:15px;height:15px;
+    opacity:0;transform:scale(0.5);
+    transition:opacity .25s ease, transform .25s ease;
+  }
+  .bingo-cell.done .bingo-check{ opacity:1;transform:scale(1); }
+  .bingo-legend{
+    max-width:460px;margin:14px auto 0;
+    display:flex;flex-wrap:wrap;justify-content:center;gap:14px;
+    font-size:11.5px;color:var(--paper-dim);
+  }
+  .bingo-legend-item{display:flex;align-items:center;gap:6px;}
+  .bingo-legend-swatch{width:9px;height:9px;border-radius:3px;}
+
+  /* ---------- Overlay ---------- */
+  .overlay{
+    position:fixed;inset:0;z-index:50;
+    background:rgba(6,10,18,0.72);
+    display:flex;align-items:center;justify-content:center;
+    padding:24px;
+    opacity:0;pointer-events:none;
+    transition:opacity .25s ease;
+  }
+  .overlay.open{opacity:1;pointer-events:auto;}
+  .overlay-close{
+    position:absolute;top:14px;right:16px;
+    background:none;border:none;color:var(--paper-dim);font-size:20px;line-height:1;
+    padding:6px;
+  }
+  .overlay-close:hover{color:var(--paper);}
+  .overlay-tag{font-size:12px;letter-spacing:0.08em;color:var(--ink-950);background:var(--tag-color, var(--gold));display:inline-block;padding:4px 12px;border-radius:100px;margin-bottom:14px;}
+
+  .bingo-detail-wrap{
+    width:100%;max-width:360px;
+    background:var(--ink-900);
+    border:1px solid var(--line-strong);
+    border-radius:18px;
+    padding:32px 24px 26px;
+    position:relative;
+    text-align:center;
+  }
+  .bingo-detail-text{font-size:17px;color:var(--paper);line-height:1.6;margin:18px 0 22px;}
+  .bingo-detail-actions{display:flex;justify-content:center;}
+
+  /* ---------- Bingo celebration ---------- */
+  .bingo-celebrate{
+    position:fixed;inset:0;z-index:60;
+    display:flex;align-items:center;justify-content:center;
+    pointer-events:none;
+    opacity:0;
+  }
+  .bingo-celebrate.show{ opacity:1; }
+  .bingo-celebrate-inner{ position:relative;display:flex;flex-direction:column;align-items:center;gap:8px; }
+  .bingo-celebrate-burst{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:10px;height:10px;border-radius:50%;
+    background:radial-gradient(circle, rgba(217,185,74,0.9) 0%, rgba(217,185,74,0.35) 40%, transparent 70%);
+    opacity:0;
+  }
+  .bingo-celebrate.show .bingo-celebrate-burst{ animation:bingoBurst 1.1s ease-out forwards; }
+  @keyframes bingoBurst{
+    0%{ width:10px;height:10px;opacity:0; }
+    25%{ opacity:1; }
+    100%{ width:540px;height:540px;opacity:0; }
+  }
+  .bingo-celebrate-text{
+    position:relative;z-index:1;
+    font-size:clamp(40px,10vw,72px);font-weight:700;color:var(--gold);
+    letter-spacing:0.08em;
+    text-shadow:0 0 24px rgba(217,185,74,0.85), 0 0 60px rgba(217,185,74,0.5);
+    opacity:0;transform:scale(0.4) rotate(-6deg);
+  }
+  .bingo-celebrate.show .bingo-celebrate-text{ animation:bingoPop .6s cubic-bezier(.2,1.4,.4,1) forwards; }
+  @keyframes bingoPop{
+    0%{ opacity:0; transform:scale(0.4) rotate(-6deg); }
+    55%{ opacity:1; transform:scale(1.15) rotate(2deg); }
+    100%{ opacity:1; transform:scale(1) rotate(0deg); }
+  }
+  .bingo-celebrate-sub{
+    position:relative;z-index:1;font-size:14px;color:var(--paper);
+    background:rgba(10,17,32,0.7);padding:6px 16px;border-radius:100px;
+    opacity:0;
+  }
+  .bingo-celebrate.show .bingo-celebrate-sub{ animation:bingoSubFade .6s ease .25s forwards; }
+  @keyframes bingoSubFade{ from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:translateY(0);} }
+  @media (prefers-reduced-motion: reduce){
+    .bingo-celebrate-burst, .bingo-celebrate-text, .bingo-celebrate-sub{ animation:none !important; }
+    .bingo-celebrate.show .bingo-celebrate-text{ opacity:1;transform:none; }
+    .bingo-celebrate.show .bingo-celebrate-sub{ opacity:1;transform:none; }
+  }
+
+  /* ---------- Footprint (발자취) ---------- */
+  .footprint-section{padding:56px 0 88px;}
+  .footprint-card{
+    max-width:460px;margin:0 auto;
+    background:var(--ink-900);border:1px solid var(--line);border-radius:18px;
+    padding:26px 24px;
+    display:flex;flex-direction:column;gap:14px;
+  }
+  .footprint-row{
+    display:flex;align-items:center;justify-content:space-between;
+    font-size:14px;color:var(--paper);
+  }
+  .footprint-row .val{color:var(--gold);font-weight:600;}
+  .footprint-message{
+    margin-top:6px;padding-top:16px;border-top:1px solid var(--line);
+    font-size:13.5px;color:var(--paper-dim);line-height:1.7;text-align:center;
+  }
+  .footprint-message.complete{color:var(--paper);}
+  .footprint-message a{font-weight:600;}
+
+  /* ---------- Footer ---------- */
+  footer{
+    border-top:1px solid var(--line);
+    padding:26px 0 40px;
+    text-align:center;
+    color:var(--paper-dim);
+    font-size:12px;
+  }
+  footer .links{margin-bottom:6px;}
+  footer .reset{margin-top:8px;display:inline-block;font-size:12px;color:var(--paper-dim);text-decoration:underline;background:none;border:none;}
+  footer .reset:hover{color:var(--paper);}
+  footer .reset.armed{color:var(--love);}
+</style>
+</head>
+<body>
+<div class="progress-bar">
+  <div class="progress-inner">
+    <span class="progress-label" id="progressLabel">0 / 7일 체크</span>
+    <div class="mini-days" id="miniDays"></div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="stars" aria-hidden="true"></div>
+  <div class="wrap hero-inner">
+    <div class="eyebrow">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 0C12 6 18 12 24 12C18 12 12 18 12 24C12 18 6 12 0 12C6 12 12 6 12 0Z" fill="#D9B94A"/>
+      </svg>
+      GRATITUDE JOURNEY 2026
+    </div>
+    <h1 class="serif">감사 저니</h1>
+    <p>추수감사절 한 주간, 매일 감사를 기록하고 감사빙고를 채워보세요. 실물 감사 위클리 패스포트(스탬프북)와 함께 쓰는 웹 동반 페이지입니다.</p>
+    <div class="hero-hint">↓ 아래에서 오늘을 체크해보세요</div>
+  </div>
+</header>
+
+<main>
+  <section class="daily-section wrap">
+    <div class="section-head">
+      <div class="kicker">Weekly Passport</div>
+      <h2 class="serif">이번 주 매일 체크</h2>
+    </div>
+    <div class="section-note">Day1~6은 혼자 채우는 하루 한 줄 감사, Day7(추수감사주일)은 조/테이블이 함께 모이는 날입니다.</div>
+    <div class="day-pillrow" id="dayPillRow"></div>
+    <div class="daily-card" id="dailyCard"></div>
+  </section>
+
+  <section class="bingo-section wrap">
+    <div class="section-head">
+      <div class="kicker">Gratitude Bingo</div>
+      <h2 class="serif">감사빙고</h2>
+    </div>
+    <div class="section-note">칸을 눌러 감사한 것을 하나씩 채워보세요. 가로·세로·대각선을 맞추면 빙고!</div>
+    <div class="bingo-progress" id="bingoProgressLabel">0 / 5줄 완성</div>
+    <div class="bingo-grid" id="bingoGrid"></div>
+    <div class="bingo-legend">
+      <div class="bingo-legend-item"><span class="bingo-legend-swatch" style="background:var(--tier-surface);"></span>표면</div>
+      <div class="bingo-legend-item"><span class="bingo-legend-swatch" style="background:var(--tier-daily);"></span>일상</div>
+      <div class="bingo-legend-item"><span class="bingo-legend-swatch" style="background:var(--tier-being);"></span>존재</div>
+      <div class="bingo-legend-item"><span class="bingo-legend-swatch" style="background:var(--gold);"></span>자유 칸</div>
+    </div>
+  </section>
+
+  <section class="footprint-section wrap">
+    <div class="section-head">
+      <div class="kicker">Footprint</div>
+      <h2 class="serif">우리의 발자취</h2>
+    </div>
+    <div class="footprint-card">
+      <div class="footprint-row"><span>매일 체크</span><span class="val" id="footprintDays">0 / 7일</span></div>
+      <div class="footprint-row"><span>감사빙고</span><span class="val" id="footprintBingo">0 / 5줄</span></div>
+      <div class="footprint-message" id="footprintMessage"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="links"><a href="advent.html">대림절 저니 보러가기 →</a></div>
+  <div>이 페이지는 이 브라우저에만 진행 상황을 저장합니다 · 기독교교육리더십연구소</div>
+  <button class="reset" id="resetBtn">진행 상황 초기화</button>
+</footer>
+
+<div class="overlay" id="bingoOverlay" role="dialog" aria-modal="true">
+  <div class="bingo-detail-wrap" id="bingoDetailWrap">
+    <button class="overlay-close" id="bingoOverlayClose" aria-label="닫기">&times;</button>
+    <div class="overlay-tag" id="bingoDetailTag">표면</div>
+    <div class="bingo-detail-text serif" id="bingoDetailText"></div>
+    <div class="bingo-detail-actions">
+      <button class="btn gold" id="bingoDetailToggle">완료로 표시</button>
+    </div>
+  </div>
+</div>
+
+<div class="bingo-celebrate" id="bingoCelebrate" aria-hidden="true">
+  <div class="bingo-celebrate-inner">
+    <div class="bingo-celebrate-burst"></div>
+    <div class="bingo-celebrate-text serif">BINGO!</div>
+    <div class="bingo-celebrate-sub" id="bingoCelebrateSub"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var STORAGE_KEY = "gratitudeJourney2026.v1";
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // 매년 이번 줄(그 해 추수감사절 한 주의 월요일 날짜)만 바꾸면 요일 표기가 그대로 따라옵니다.
+  // (날짜는 화면 표시용일 뿐, 요일별 잠금은 두지 않았습니다 — 자기 기록형 콘텐츠라 스포일러 개념이 없습니다.)
+  var THANKS_START = "2026-11-16";
+
+  function parseISODate(iso){
+    var p = iso.split("-").map(Number);
+    return new Date(p[0], p[1] - 1, p[2]);
+  }
+  function addDays(date, n){
+    var d = new Date(date.getTime());
+    d.setDate(d.getDate() + n);
+    return d;
+  }
+  function formatMonthDay(d){ return (d.getMonth() + 1) + "월 " + d.getDate() + "일"; }
+  var DOW_LABELS = ["일", "월", "화", "수", "목", "금", "토"];
+  var thanksStartDate = parseISODate(THANKS_START);
+
+  var DAYS = [
+    { no:1 }, { no:2 }, { no:3 }, { no:4 }, { no:5 }, { no:6 },
+    { no:7, gathering:true }
+  ];
+
+  var GATHERING = {
+    title:"추수감사주일 — 함께 모이는 날",
+    desc:"오늘은 조/테이블별로 모여 감사 대화카드를 나누는 날입니다. 스탬프북을 꼭 챙겨오세요.",
+    steps:[
+      "감사 대화카드 뽑기 — 표면 → 일상 → 존재 순서로 나눔",
+      "릴레이 카드로 옆 사람과 나눔 마무리",
+      "감사빙고 몇 줄 완성했는지 서로 확인",
+      "스탬프북 '우리의 발자취' 페이지 기록",
+      "브릿지 카드로 대림절 저니 예고 받기"
+    ]
+  };
+
+  var DAILY_PROMPTS = [
+    "오늘 아침 눈뜨자마자 감사했던 것은 무엇인가요?",
+    "오늘 하루 중, 당연하게 여겼지만 사실은 감사한 일 한 가지는?",
+    "오늘 나를 도와준 사람이 있었나요?",
+    "오늘 가장 편안했던 순간은 언제였나요?",
+    "오늘 새롭게 알게 되거나 배운 것이 있었나요?",
+    "이번 한 주를 돌아보면, 가장 감사한 순간은 언제였나요?"
+  ];
+
+  // ---------- Gratitude Bingo (감사빙고): 5×5, 표면14 · 일상7 · 존재3 + 자유칸 1 ----------
+  // 실제 문구는 예시입니다 — 최종 문구는 팀에서 `14_추수감사절_대림절_콘텐츠_설계도` 1-2의 카드 톤에 맞춰 확정해주세요.
+  var TIER_LABEL = { surface:"표면", daily:"일상", being:"존재", free:"자유 칸" };
+  var TIER_COLOR = { surface:"#C9A227", daily:"#B5651D", being:"#7A2E2E", free:"#D9B94A" };
+
+  var BINGO_CELLS = (function(){
+    var surface = [
+      "오늘 아침 눈뜨자마자 감사했던 것 한 가지",
+      "지금 내가 앉아 있는 자리",
+      "오늘 먹은 음식 중 하나",
+      "지금 손에 쥔 핸드폰",
+      "오늘 본 하늘 색",
+      "지금 신고 있는 신발",
+      "오늘 들은 노래 한 곡",
+      "지금 내 옆에 있는 물건 하나",
+      "오늘 마신 물 한 잔",
+      "어젯밤 덮고 잔 이불",
+      "오늘 걸었던 길",
+      "지금 켜져 있는 불빛",
+      "오늘 입은 옷 한 벌",
+      "매일 타는 버스나 지하철"
+    ];
+    var daily = [
+      "오늘 나에게 먼저 인사해준 사람",
+      "가족 중 한 사람에게 감사한 점",
+      "문득 생각나는 친구 한 명",
+      "오늘 나를 웃게 한 사람",
+      "나를 위해 밥을 차려준 사람",
+      "오늘 이야기를 나눈 사람",
+      "나를 위해 기도해준 사람"
+    ];
+    var being = [
+      "힘들었지만 버텨낸 순간 하나",
+      "지금의 나를 있게 한 시간",
+      "여전히 나와 함께하시는 하나님"
+    ];
+    // 24칸(자유칸 제외) 배치 순서: 표면·일상·존재를 고르게 섞어 한쪽에 몰리지 않게 함
+    var pattern = ["s","d","s","s","b","s","d","s","s","d","s","b",
+                    "s","d","s","s","d","s","b","s","d","s","s","d"];
+    var si = 0, di = 0, bi = 0;
+    var cells = new Array(25);
+    var p = 0;
+    for (var i = 0; i < 25; i++){
+      if (i === 12) { cells[i] = { tier:"free", text:"자유 칸 — 오늘 떠오른 감사 한 가지를 적어보세요" }; continue; }
+      var t = pattern[p++];
+      if (t === "s") cells[i] = { tier:"surface", text: surface[si++] };
+      else if (t === "d") cells[i] = { tier:"daily", text: daily[di++] };
+      else cells[i] = { tier:"being", text: being[bi++] };
+    }
+    return cells;
+  })();
+
+  var BINGO_LINES = (function(){
+    var lines = [];
+    for (var r = 0; r < 5; r++){ var row = []; for (var c = 0; c < 5; c++) row.push(r * 5 + c); lines.push(row); }
+    for (var c2 = 0; c2 < 5; c2++){ var col = []; for (var r2 = 0; r2 < 5; r2++) col.push(r2 * 5 + c2); lines.push(col); }
+    lines.push([0, 6, 12, 18, 24]);
+    lines.push([4, 8, 12, 16, 20]);
+    return lines;
+  })();
+  var BINGO_TARGET_LINES = 5;
+
+  function isCellDone(i){ return i === 12 || !!state.bingo[i]; }
+  function completedLineCount(){
+    return BINGO_LINES.filter(function(line){ return line.every(isCellDone); }).length;
+  }
+  function checkSvg(){
+    return '<svg class="bingo-check" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+      '<circle cx="12" cy="12" r="11" fill="#0A1120" opacity="0.22"/>' +
+      '<path d="M6 12.5L10 16.5L18 8" stroke="#0A1120" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  }
+
+  var state = { days:{}, bingo:{} };
+  try {
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      var parsed = JSON.parse(saved);
+      state.days = Object.assign({}, parsed.days || {});
+      state.bingo = Object.assign({}, parsed.bingo || {});
+    }
+  } catch(e) { /* storage unavailable — continue with in-memory state */ }
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) { /* ignore */ }
+  }
+
+  function dayState(no){
+    if (!state.days[no]) state.days[no] = { text:"", done:false };
+    return state.days[no];
+  }
+  function daysDoneCount(){
+    return DAYS.filter(function(d){ return !!(state.days[d.no] && state.days[d.no].done); }).length;
+  }
+
+  var progressLabel = document.getElementById("progressLabel");
+  var miniDays = document.getElementById("miniDays");
+  var dayPillRow = document.getElementById("dayPillRow");
+  var dailyCard = document.getElementById("dailyCard");
+  var bingoGrid = document.getElementById("bingoGrid");
+  var bingoProgressLabel = document.getElementById("bingoProgressLabel");
+  var footprintDays = document.getElementById("footprintDays");
+  var footprintBingo = document.getElementById("footprintBingo");
+  var footprintMessage = document.getElementById("footprintMessage");
+
+  var selectedDay = 1;
+
+  function renderProgress(){
+    progressLabel.textContent = daysDoneCount() + " / 7일 체크";
+    miniDays.innerHTML = "";
+    DAYS.forEach(function(d){
+      var el = document.createElement("div");
+      el.className = "mini-day" + ((state.days[d.no] && state.days[d.no].done) ? " lit" : "");
+      miniDays.appendChild(el);
+    });
+  }
+
+  function renderDayPills(){
+    dayPillRow.innerHTML = "";
+    DAYS.forEach(function(d){
+      var done = !!(state.days[d.no] && state.days[d.no].done);
+      var pill = document.createElement("button");
+      pill.className = "day-pill" + (d.no === selectedDay ? " active" : "") + (done ? " done" : "") + (d.gathering ? " gathering" : "");
+      pill.textContent = d.gathering ? "Day7" : "Day" + d.no;
+      pill.addEventListener("click", function(){ selectedDay = d.no; renderDaily(); renderDayPills(); });
+      dayPillRow.appendChild(pill);
+    });
+  }
+
+  function renderDaily(){
+    var day = DAYS.filter(function(d){ return d.no === selectedDay; })[0];
+    var realDate = addDays(thanksStartDate, selectedDay - 1);
+    var ds = dayState(selectedDay);
+
+    if (day.gathering) {
+      dailyCard.innerHTML =
+        '<div class="daily-kind">Day 7 · 추수감사주일</div>' +
+        '<div class="daily-date">' + formatMonthDay(realDate) + ' · ' + DOW_LABELS[realDate.getDay()] + '요일</div>' +
+        '<div class="gathering-title serif">' + GATHERING.title + '</div>' +
+        '<div class="gathering-desc">' + GATHERING.desc + '</div>' +
+        '<ul class="gathering-steps">' +
+          GATHERING.steps.map(function(s, i){
+            return '<li><span class="num">' + (i + 1) + '</span><span>' + s + '</span></li>';
+          }).join('') +
+        '</ul>' +
+        '<div class="daily-toggle"><button class="btn' + (ds.done ? ' gold' : '') + '" id="dailyToggleBtn">' + (ds.done ? '오늘 참여 완료' : '오늘 참여 완료로 표시') + '</button></div>';
+    } else {
+      var prompt = DAILY_PROMPTS[(selectedDay - 1) % DAILY_PROMPTS.length];
+      dailyCard.innerHTML =
+        '<div class="daily-kind">Day ' + selectedDay + '</div>' +
+        '<div class="daily-date">' + formatMonthDay(realDate) + ' · ' + DOW_LABELS[realDate.getDay()] + '요일</div>' +
+        '<div class="daily-prompt">' + prompt + '</div>' +
+        '<textarea class="daily-textarea" id="dailyTextarea" placeholder="오늘의 감사 한 줄을 적어보세요">' + (ds.text || '') + '</textarea>' +
+        '<div class="daily-toggle"><button class="btn' + (ds.done ? ' gold' : '') + '" id="dailyToggleBtn">' + (ds.done ? '오늘 감사 기록 완료' : '오늘 감사 기록 완료로 표시') + '</button></div>';
+
+      document.getElementById("dailyTextarea").addEventListener("input", function(e){
+        dayState(selectedDay).text = e.target.value;
+        save();
+      });
+    }
+
+    document.getElementById("dailyToggleBtn").addEventListener("click", function(){
+      var s = dayState(selectedDay);
+      s.done = !s.done;
+      save();
+      renderDaily();
+      renderDayPills();
+      renderProgress();
+      renderFootprint();
+    });
+  }
+
+  function renderBingo(){
+    bingoGrid.innerHTML = "";
+    BINGO_CELLS.forEach(function(cell, i){
+      var done = isCellDone(i);
+      var el = document.createElement("button");
+      el.type = "button";
+      el.className = "bingo-cell" + (done ? " done" : "") + (cell.tier === "free" ? " free" : "");
+      el.setAttribute("data-tier", cell.tier);
+      el.innerHTML = '<span class="bingo-cell-text">' + cell.text + '</span>' + checkSvg();
+      el.addEventListener("click", function(){ openBingoCell(i); });
+      bingoGrid.appendChild(el);
+    });
+    bingoProgressLabel.textContent = completedLineCount() + " / " + BINGO_TARGET_LINES + "줄 완성";
+  }
+
+  function renderFootprint(){
+    var d = daysDoneCount();
+    var b = completedLineCount();
+    footprintDays.textContent = d + " / 7일";
+    footprintBingo.textContent = b + " / " + BINGO_TARGET_LINES + "줄";
+    if (d >= 7 && b >= BINGO_TARGET_LINES) {
+      footprintMessage.className = "footprint-message complete";
+      footprintMessage.innerHTML = "감사 저니를 완주했어요. 다음 순서는 <a href=\"https://claude.ai/artifact/ToCqke9sCQD38XJdLznkVi\" target=\"_blank\" rel=\"noopener\">대림절 저니</a>로 이어집니다.";
+    } else {
+      footprintMessage.className = "footprint-message";
+      footprintMessage.textContent = "매일 체크와 감사빙고를 모두 채우면, 이곳에 완주 기록이 남습니다.";
+    }
+  }
+
+  function renderAll(){
+    renderProgress();
+    renderDayPills();
+    renderDaily();
+    renderBingo();
+    renderFootprint();
+  }
+
+  // ---------- Bingo detail overlay + celebration ----------
+  var bingoOverlay = document.getElementById("bingoOverlay");
+  var bingoDetailTag = document.getElementById("bingoDetailTag");
+  var bingoDetailText = document.getElementById("bingoDetailText");
+  var bingoDetailToggle = document.getElementById("bingoDetailToggle");
+  var bingoCelebrate = document.getElementById("bingoCelebrate");
+  var bingoCelebrateSub = document.getElementById("bingoCelebrateSub");
+  var bingoCelebrateTimer = null;
+  var currentBingoIndex = null;
+
+  function closeBingoOverlay(){ bingoOverlay.classList.remove("open"); }
+
+  function openBingoCell(i){
+    currentBingoIndex = i;
+    var cell = BINGO_CELLS[i];
+    bingoDetailTag.textContent = TIER_LABEL[cell.tier];
+    bingoDetailTag.style.setProperty("--tag-color", TIER_COLOR[cell.tier]);
+    bingoDetailText.textContent = cell.text;
+    if (i === 12) {
+      bingoDetailToggle.textContent = "자유 칸은 항상 완성돼 있어요";
+      bingoDetailToggle.disabled = true;
+    } else {
+      bingoDetailToggle.disabled = false;
+      bingoDetailToggle.textContent = isCellDone(i) ? "완료 취소" : "완료로 표시";
+    }
+    bingoOverlay.classList.add("open");
+  }
+
+  function celebrateBingo(lineCount){
+    bingoCelebrateSub.textContent = lineCount + "줄 완성!";
+    bingoCelebrate.classList.remove("show");
+    void bingoCelebrate.offsetWidth; // force reflow so it can replay back-to-back
+    bingoCelebrate.classList.add("show");
+    window.clearTimeout(bingoCelebrateTimer);
+    bingoCelebrateTimer = window.setTimeout(function(){
+      bingoCelebrate.classList.remove("show");
+    }, reduceMotion ? 1400 : 1700);
+  }
+
+  function toggleBingoCell(i){
+    if (i === 12) return; // 자유 칸은 항상 완성 상태
+    var before = completedLineCount();
+    state.bingo[i] = !state.bingo[i];
+    save();
+    renderBingo();
+    renderFootprint();
+    var after = completedLineCount();
+    if (after > before) celebrateBingo(after);
+  }
+
+  bingoDetailToggle.addEventListener("click", function(){
+    if (currentBingoIndex === null || currentBingoIndex === 12) return;
+    toggleBingoCell(currentBingoIndex);
+    bingoDetailToggle.textContent = isCellDone(currentBingoIndex) ? "완료 취소" : "완료로 표시";
+  });
+
+  document.getElementById("bingoOverlayClose").addEventListener("click", closeBingoOverlay);
+  bingoOverlay.addEventListener("click", function(e){ if (e.target === bingoOverlay) closeBingoOverlay(); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape") closeBingoOverlay(); });
+
+  // Reset uses the "click again to confirm" pattern instead of window.confirm(), which
+  // some embedded/sandboxed views block silently.
+  var resetBtn = document.getElementById("resetBtn");
+  var resetArmed = false;
+  var resetArmTimer = null;
+  resetBtn.addEventListener("click", function(){
+    if (!resetArmed) {
+      resetArmed = true;
+      resetBtn.textContent = "정말 초기화할까요? (다시 클릭)";
+      resetBtn.classList.add("armed");
+      window.clearTimeout(resetArmTimer);
+      resetArmTimer = window.setTimeout(function(){
+        resetArmed = false;
+        resetBtn.classList.remove("armed");
+        resetBtn.textContent = "진행 상황 초기화";
+      }, 3000);
+      return;
+    }
+    resetArmed = false;
+    window.clearTimeout(resetArmTimer);
+    resetBtn.classList.remove("armed");
+    resetBtn.textContent = "진행 상황 초기화";
+    state = { days:{}, bingo:{} };
+    save();
+    renderAll();
+  });
+
+  renderAll();
+})();
+</script>
+</body>
+</html>

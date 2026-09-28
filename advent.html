@@ -1,0 +1,1177 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>대림절 저니</title>
+<style>
+  :root{
+    --ink-950:#0A1120;
+    --ink-900:#111A2E;
+    --ink-850:#16223A;
+    --ink-800:#1D2C48;
+    --paper:#F1E7C9;
+    --paper-dim:#B7AD8C;
+    --gold:#D9B94A;
+    --gold-soft:#8C7A3E;
+    --hope:#6E8FD1;
+    --peace:#9A83CE;
+    --joy:#D98CA6;
+    --love:#C9515C;
+    --line: rgba(241,231,201,0.14);
+    --line-strong: rgba(241,231,201,0.28);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ink-950);
+    color:var(--paper);
+    font-family:"Noto Sans KR", system-ui, sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--gold);color:var(--ink-950);}
+
+  a{color:var(--gold);}
+  a:hover{color:#EAD27A;}
+
+  .serif{font-family:"Noto Serif KR", serif;}
+
+  h1,h2,h3{text-wrap:balance;margin:0;}
+
+  button{font-family:inherit;cursor:pointer;}
+  button:focus-visible, a:focus-visible{
+    outline:2px solid var(--gold);
+    outline-offset:3px;
+  }
+
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+
+  /* ---------- Starfield ---------- */
+  .stars{
+    position:absolute;inset:0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 10% 20%, rgba(241,231,201,0.55) 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 80% 15%, rgba(241,231,201,0.4) 50%, transparent 51%),
+      radial-gradient(1px 1px at 60% 35%, rgba(241,231,201,0.5) 50%, transparent 51%),
+      radial-gradient(1px 1px at 30% 55%, rgba(241,231,201,0.35) 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 90% 60%, rgba(241,231,201,0.45) 50%, transparent 51%),
+      radial-gradient(1px 1px at 45% 80%, rgba(241,231,201,0.4) 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 15% 85%, rgba(241,231,201,0.5) 50%, transparent 51%),
+      radial-gradient(1px 1px at 70% 90%, rgba(241,231,201,0.35) 50%, transparent 51%);
+    opacity:0.9;
+    pointer-events:none;
+  }
+
+  /* ---------- Sticky progress bar ---------- */
+  .progress-bar{
+    position:sticky;top:0;z-index:20;
+    background:rgba(10,17,32,0.86);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .progress-inner{
+    max-width:1080px;margin:0 auto;padding:12px 24px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+  }
+  .progress-label{font-size:13px;color:var(--paper-dim);letter-spacing:0.02em;white-space:nowrap;}
+  .mini-candles{display:flex;gap:10px;}
+  .mini-candle{width:10px;height:10px;border-radius:50%;background:var(--ink-800);border:1px solid var(--line-strong);transition:background .4s ease, box-shadow .4s ease;}
+  .mini-candle.lit{box-shadow:0 0 8px 1px currentColor;}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    padding:88px 0 72px;
+    overflow:hidden;
+    border-bottom:1px solid var(--line);
+  }
+  .hero-inner{position:relative;z-index:1;text-align:center;display:flex;flex-direction:column;align-items:center;gap:18px;}
+  .eyebrow{
+    display:flex;align-items:center;gap:8px;
+    font-size:12px;letter-spacing:0.32em;color:var(--gold-soft);text-transform:uppercase;
+  }
+  .hero h1{
+    font-size:clamp(36px, 6vw, 56px);
+    font-weight:700;color:var(--paper);
+    letter-spacing:0.01em;
+  }
+  .hero p{
+    max-width:38ch;color:var(--paper-dim);font-size:16px;
+  }
+  .hero-hint{font-size:13px;color:var(--gold-soft);margin-top:8px;}
+
+  @keyframes flicker{
+    0%,100%{ transform:scaleY(1) rotate(0deg); opacity:1; }
+    45%{ transform:scaleY(1.06) rotate(-2deg); opacity:0.92; }
+    70%{ transform:scaleY(0.97) rotate(2deg); opacity:1; }
+  }
+  @media (prefers-reduced-motion: no-preference){
+    .flame{ transform-origin:50% 100%; animation:flicker 2.6s ease-in-out infinite; }
+  }
+
+  /* ---------- Weeks ---------- */
+  .weeks-section{padding:64px 0 40px;}
+  .section-head{text-align:center;max-width:52ch;margin:0 auto 40px;}
+  .section-head .kicker{font-size:12px;letter-spacing:0.22em;color:var(--gold-soft);text-transform:uppercase;}
+  .section-head h2{font-size:26px;margin-top:8px;color:var(--paper);}
+
+  .week-grid{
+    display:grid;
+    grid-template-columns:repeat(4, minmax(0,1fr));
+    gap:20px;
+  }
+  @media (max-width:860px){
+    .week-grid{grid-template-columns:repeat(2, minmax(0,1fr));}
+  }
+  @media (max-width:520px){
+    .week-grid{grid-template-columns:1fr;}
+  }
+
+  .week-card{
+    background:linear-gradient(180deg, var(--ink-900), var(--ink-850));
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:26px 20px 22px;
+    display:flex;flex-direction:column;align-items:center;gap:14px;
+    text-align:center;
+    transition:border-color .25s ease, transform .25s ease;
+  }
+  .week-card:hover{border-color:var(--line-strong);transform:translateY(-2px);}
+  .week-card.done{border-color:var(--gold-soft);}
+  .week-card.locked{border-style:dashed;}
+  .week-card.locked .candle-badge svg{ filter:grayscale(1) opacity(0.4); }
+  .week-lock-note{font-size:12.5px;color:var(--paper-dim);min-height:44px;display:flex;align-items:center;justify-content:center;}
+
+  .candle-badge{width:38px;height:64px;position:relative;}
+  .week-tag{
+    font-size:12px;letter-spacing:0.05em;color:var(--ink-950);
+    background:var(--week-color, var(--gold));
+    padding:4px 12px;border-radius:100px;font-weight:500;
+  }
+  .week-devotional{font-size:14px;color:var(--paper);line-height:1.7;min-height:44px;}
+  .week-mission{font-size:12.5px;color:var(--paper-dim);}
+  .week-status{
+    font-size:11.5px;letter-spacing:0.04em;color:var(--paper-dim);
+    display:flex;align-items:center;gap:6px;
+  }
+  .week-status .dot{width:6px;height:6px;border-radius:50%;background:var(--paper-dim);}
+  .week-status.done{color:var(--gold);}
+  .week-status.done .dot{background:var(--gold);}
+
+  .btn{
+    border:1px solid var(--line-strong);
+    background:transparent;
+    color:var(--paper);
+    padding:9px 18px;
+    border-radius:100px;
+    font-size:13px;
+    transition:background .2s ease, color .2s ease, border-color .2s ease;
+  }
+  .btn:hover{background:var(--paper);color:var(--ink-950);border-color:var(--paper);}
+  .btn.gold{border-color:var(--gold);color:var(--gold);}
+  .btn.gold:hover{background:var(--gold);color:var(--ink-950);}
+
+  /* ---------- Overlay ---------- */
+  .overlay{
+    position:fixed;inset:0;z-index:50;
+    background:rgba(6,10,18,0.72);
+    display:flex;align-items:center;justify-content:center;
+    padding:24px;
+    opacity:0;pointer-events:none;
+    transition:opacity .25s ease;
+  }
+  .overlay.open{opacity:1;pointer-events:auto;}
+
+  .envelope-wrap{
+    width:100%;max-width:420px;
+    background:var(--ink-900);
+    border:1px solid var(--line-strong);
+    border-radius:18px;
+    padding:28px 24px 24px;
+    position:relative;
+  }
+  .overlay-close{
+    position:absolute;top:14px;right:16px;
+    background:none;border:none;color:var(--paper-dim);font-size:20px;line-height:1;
+    padding:6px;
+  }
+  .overlay-close:hover{color:var(--paper);}
+
+  .overlay-tag{font-size:12px;letter-spacing:0.08em;color:var(--ink-950);background:var(--week-color, var(--gold));display:inline-block;padding:4px 12px;border-radius:100px;margin-bottom:14px;}
+
+  .overlay-lock-note{
+    display:none;flex-direction:column;align-items:center;gap:10px;
+    padding:42px 10px 34px;color:var(--paper-dim);
+  }
+  .overlay-lock-note .lock-icon{color:var(--week-color, var(--paper-dim));opacity:.9;}
+  .overlay-lock-note .lock-title{font-size:14px;color:var(--paper);}
+  .overlay-lock-note .lock-sub{font-size:12.5px;}
+
+  .envelope-stage{
+    position:relative;height:190px;margin:8px 0 18px;
+  }
+  .envelope-body{
+    position:absolute;left:50%;top:46px;transform:translateX(-50%);
+    width:260px;height:140px;
+    background:#D8C48F;border-radius:8px;
+    border:1px solid #B79E63;
+    box-shadow:0 14px 26px rgba(0,0,0,0.35);
+  }
+  .envelope-flap{
+    position:absolute;left:50%;top:46px;transform-origin:top center;transform:translateX(-50%);
+    width:0;height:0;
+    border-left:130px solid transparent;
+    border-right:130px solid transparent;
+    border-top:74px solid #C8B074;
+    transition:opacity .6s ease, transform .6s ease;
+    z-index:3;
+    pointer-events:none;
+  }
+  .envelope-wrap.opened .envelope-flap{
+    opacity:0;
+    transform:translateX(-50%) translateY(-22px) scale(0.9);
+  }
+
+  .seal{
+    position:absolute;left:50%;top:80px;transform:translateX(-50%);
+    width:38px;height:38px;border-radius:50%;
+    background:var(--love);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 10px rgba(0,0,0,0.35);
+    z-index:4;
+    transition:opacity .4s ease .1s;
+  }
+  .envelope-wrap.opened .seal{opacity:0;}
+
+  .card-slide{
+    position:absolute;left:50%;top:36px;transform:translate(-50%, 0);
+    width:230px;min-height:150px;
+    background:var(--paper);
+    color:#241E10;
+    border-radius:10px;
+    box-shadow:0 12px 24px rgba(0,0,0,0.3);
+    padding:18px 18px 16px;
+    z-index:6;
+    opacity:0;
+    transition:transform .75s cubic-bezier(.16,1,.3,1) .22s, opacity .55s ease .22s;
+  }
+  .envelope-wrap.opened .card-slide{
+    transform:translate(-50%, -104px);
+    opacity:1;
+  }
+  .card-slide .verse{font-family:"Noto Serif KR", serif;font-size:14px;line-height:1.6;}
+  .card-slide .question{font-size:12.5px;color:#5A4E2C;margin-top:10px;}
+
+  .envelope-wrap.stamped .envelope-body,
+  .envelope-wrap.stamped .card-slide,
+  .envelope-wrap.stamped .envelope-flap,
+  .envelope-wrap.stamped .seal{
+    opacity:0; transition:opacity .32s ease;
+  }
+
+  /* ---------- Stamp effect ---------- */
+  .stamp-fx{
+    position:absolute;left:50%;top:67px;width:64px;height:64px;z-index:8;
+    transform:translate(-50%, 56px) scale(0.6);
+    opacity:0;
+    pointer-events:none;
+  }
+  .stamp-fx svg{ display:block;width:100%;height:100%; }
+  .stamp-fx.enter{
+    transition:transform .42s cubic-bezier(.2,.8,.3,1), opacity .3s ease;
+    transform:translate(-50%, 0) scale(1);
+    opacity:1;
+  }
+  .stamp-fx.impact{ animation:stampThud .32s ease-out; }
+  @keyframes stampThud{
+    0%{ transform:translate(-50%,0) scale(1) rotate(0deg); }
+    30%{ transform:translate(-50%,0) scale(1.32) rotate(-7deg); }
+    55%{ transform:translate(-50%,0) scale(0.92) rotate(4deg); }
+    100%{ transform:translate(-50%,0) scale(1.04) rotate(0deg); }
+  }
+  .stamp-fx.settle{
+    transition:opacity .5s ease, transform .5s ease;
+    opacity:0.94;
+    transform:translate(-50%,0) scale(1);
+  }
+  .stamp-fx.resting{ opacity:0.92; transform:translate(-50%,0) scale(1); }
+  @media (prefers-reduced-motion: reduce){
+    .stamp-fx, .stamp-fx.enter, .stamp-fx.impact, .stamp-fx.settle{ animation:none !important; transition:none !important; }
+  }
+
+  .stamp-glow{
+    position:absolute;left:50%;top:99px;transform:translate(-50%,-50%);
+    width:10px;height:10px;border-radius:50%;
+    background:radial-gradient(circle, rgba(217,185,74,0.85) 0%, rgba(217,185,74,0.3) 45%, transparent 72%);
+    opacity:0;z-index:7;pointer-events:none;
+  }
+  .stamp-glow.burst{ animation:glowBurst .7s ease-out forwards; }
+  @keyframes glowBurst{
+    0%{ width:10px;height:10px;opacity:0; }
+    30%{ opacity:0.9; }
+    100%{ width:230px;height:230px;opacity:0; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .stamp-glow.burst{ animation:none !important; }
+  }
+
+  .envelope-stage.wiggle{ animation:stageWiggle .34s ease-in-out; }
+  @keyframes stageWiggle{
+    0%,100%{ transform:translateX(0) rotate(0deg); }
+    20%{ transform:translateX(-6px) rotate(-1deg); }
+    40%{ transform:translateX(5px) rotate(1deg); }
+    60%{ transform:translateX(-4px) rotate(-0.5deg); }
+    80%{ transform:translateX(3px) rotate(0.5deg); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .envelope-stage.wiggle{ animation:none !important; }
+  }
+
+  .envelope-hint{
+    text-align:center;font-size:12px;color:var(--paper-dim);margin-bottom:16px;
+  }
+
+  .overlay-actions{display:flex;flex-direction:column;align-items:center;gap:10px;}
+  .undo-link{
+    background:none;border:none;color:var(--paper-dim);font-size:12px;
+    text-decoration:underline;padding:2px;
+  }
+  .undo-link:hover{color:var(--paper);}
+  .undo-link.armed{color:var(--love);}
+
+  /* ---------- Stickers ---------- */
+  .stickers-section{padding:56px 0 88px;}
+  .sticker-rack{
+    background:var(--ink-900);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:24px;
+    display:grid;
+    grid-template-columns:repeat(8, minmax(0,1fr));
+    gap:12px;
+  }
+  @media (max-width:760px){
+    .sticker-rack{grid-template-columns:repeat(4, minmax(0,1fr));}
+  }
+  .sticker-slot{
+    position:relative;
+    aspect-ratio:1;
+    overflow:hidden;
+    border:1.5px dashed var(--line-strong);
+    border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    transition:border-color .4s ease, transform .4s ease;
+  }
+  .sticker-slot.unlocked{
+    border-style:solid;border-color:var(--line);
+  }
+  .sticker-icon{
+    position:relative;z-index:1;display:flex;
+    --tilt: -7deg;
+    filter:blur(6px) drop-shadow(0 0 0 transparent) drop-shadow(0 0 0 transparent) drop-shadow(0 0px 0px transparent);
+    transform:translateY(-14px) rotate(-14deg) scale(0.86);
+    transition:transform 1.3s cubic-bezier(.34,1.56,.64,1), filter 1.3s ease-out;
+  }
+  /* die-cut sticker look: a doubled zero-spread drop-shadow fakes a paper-cutout outline,
+     plus a real lifted shadow — both fade in together as the sticker "sticks" into place */
+  .sticker-slot.unlocked .sticker-icon{
+    filter:blur(0) drop-shadow(0 0 2.5px var(--paper)) drop-shadow(0 0 2.5px var(--paper)) drop-shadow(0 5px 6px rgba(0,0,0,.5));
+    transform:translateY(0) rotate(var(--tilt)) scale(1);
+  }
+  .sticker-icon::after{
+    content:"";
+    position:absolute;top:8%;left:16%;width:42%;height:28%;
+    background:radial-gradient(ellipse at center, rgba(255,255,255,.55), transparent 72%);
+    border-radius:50%;
+    mix-blend-mode:screen;
+    opacity:.5;
+    pointer-events:none;
+  }
+  .sticker-rack .sticker-slot:nth-child(even) .sticker-icon{ --tilt: 7deg; }
+  /* "색칠" reveal: the cover fades away as the sticker sticks into place, no hard edge */
+  .sticker-mask{
+    position:absolute;inset:0;z-index:2;
+    background:var(--ink-900);
+    opacity:1;
+    transition:opacity 1.2s ease-out;
+    pointer-events:none;
+  }
+  .sticker-slot.unlocked .sticker-mask{ opacity:0; }
+  .sticker-shine{
+    position:absolute;left:50%;top:50%;width:150%;height:150%;z-index:3;
+    transform:translate(-50%,-50%) scale(0.3);
+    background:radial-gradient(circle, rgba(217,185,74,0.5), transparent 68%);
+    opacity:0;
+    pointer-events:none;
+  }
+  .sticker-slot.revealing .sticker-shine{ animation:softGlow 1.4s ease; }
+  @keyframes softGlow{
+    0%{ opacity:0; transform:translate(-50%,-50%) scale(0.3); }
+    40%{ opacity:.85; }
+    100%{ opacity:0; transform:translate(-50%,-50%) scale(1.35); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .sticker-mask, .sticker-icon{ transition:none; }
+    .sticker-slot.revealing .sticker-shine{ animation:none; }
+  }
+
+  /* ---------- Daily section ---------- */
+  .daily-section{padding:56px 0 40px;}
+  .daily-note{text-align:center;max-width:56ch;margin:-24px auto 32px;color:var(--paper-dim);font-size:13px;}
+  .week-tabstrip{
+    display:flex;justify-content:center;gap:8px;margin-bottom:22px;flex-wrap:wrap;
+  }
+  .week-tab{
+    border:1px solid var(--line-strong);background:transparent;color:var(--paper-dim);
+    padding:7px 16px;border-radius:100px;font-size:13px;transition:all .2s ease;
+  }
+  .week-tab.active{background:var(--week-color, var(--paper));color:var(--ink-950);border-color:var(--week-color, var(--paper));}
+  .week-tab.locked{color:var(--paper-dim);opacity:.65;}
+
+  .day-pillrow{display:flex;justify-content:center;gap:8px;margin-bottom:24px;flex-wrap:wrap;}
+  .day-pill{
+    position:relative;
+    width:42px;height:42px;border-radius:50%;
+    border:1.5px solid var(--line-strong);background:var(--ink-900);color:var(--paper-dim);
+    font-size:13px;display:flex;align-items:center;justify-content:center;
+    transition:all .2s ease;
+  }
+  .day-pill.active{border-color:var(--gold);color:var(--gold);}
+  .day-pill.done{background:var(--gold-soft);color:var(--ink-950);border-color:var(--gold-soft);}
+  .day-pill.locked{
+    opacity:.5;border-style:dashed;
+    border-color:var(--week-color, var(--line-strong));
+  }
+  .day-pill .today-dot{
+    position:absolute;top:-3px;right:-3px;width:8px;height:8px;border-radius:50%;background:var(--gold);
+    box-shadow:0 0 6px 1px var(--gold);
+  }
+  .day-pill .lock-mark{
+    position:absolute;bottom:-3px;right:-3px;width:14px;height:14px;border-radius:50%;
+    background:var(--ink-950);border:1px solid var(--line-strong);
+    display:flex;align-items:center;justify-content:center;color:var(--paper-dim);
+  }
+  .day-pill .lock-mark svg{width:8px;height:8px;}
+
+  .daily-card{
+    max-width:520px;margin:0 auto;
+    background:linear-gradient(180deg, var(--ink-900), var(--ink-850));
+    border:1px solid var(--line);border-radius:16px;
+    padding:26px 26px 22px;
+    text-align:center;
+  }
+  .daily-card.draft{border-style:dashed;}
+  .daily-card.locked{border-style:dashed;}
+  .daily-kind{font-size:11.5px;letter-spacing:0.08em;color:var(--gold-soft);text-transform:uppercase;margin-bottom:10px;}
+  .daily-verse{font-family:"Noto Serif KR", serif;font-size:16px;line-height:1.7;color:var(--paper);}
+  .daily-text{font-size:14px;color:var(--paper-dim);margin-top:10px;line-height:1.7;}
+  .daily-draft-note{font-size:12.5px;color:var(--paper-dim);font-style:italic;margin-top:6px;}
+  .daily-toggle{margin-top:18px;}
+  .daily-lock-icon{display:flex;justify-content:center;color:var(--week-color, var(--paper-dim));opacity:.9;margin-bottom:4px;}
+  .daily-lock-title{font-size:14px;color:var(--paper);}
+  .daily-lock-note{font-size:12.5px;color:var(--paper-dim);margin-top:4px;}
+
+  /* ---------- Footer ---------- */
+  footer{
+    border-top:1px solid var(--line);
+    padding:26px 0 40px;
+    text-align:center;
+    color:var(--paper-dim);
+    font-size:12px;
+  }
+  footer .reset{margin-top:8px;display:inline-block;font-size:12px;color:var(--paper-dim);text-decoration:underline;background:none;border:none;}
+  footer .reset:hover{color:var(--paper);}
+  footer .reset.armed{color:var(--love);}
+  footer .links{margin-bottom:6px;}
+</style>
+</head>
+<body>
+<div class="progress-bar">
+  <div class="progress-inner">
+    <span class="progress-label" id="progressLabel">0 / 4주 완료</span>
+    <div class="mini-candles" id="miniCandles"></div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="stars" aria-hidden="true"></div>
+  <div class="wrap hero-inner">
+    <div class="eyebrow">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 0C12 6 18 12 24 12C18 12 12 18 12 24C12 18 6 12 0 12C6 12 12 6 12 0Z" fill="#D9B94A"/>
+      </svg>
+      ADVENT JOURNEY 2026
+    </div>
+    <h1 class="serif">대림절 저니</h1>
+    <p>어둠 속에서 빛을 기다리듯, 4주간 한 주씩 촛불을 밝혀갑니다. 한 주의 말씀을 열어보고, 미션을 마치면 스탬프를 찍어보세요.</p>
+    <div class="hero-hint">↓ 아래에서 이번 주를 열어보세요</div>
+  </div>
+</header>
+
+<main>
+  <section class="weeks-section wrap">
+    <div class="section-head">
+      <div class="kicker">Four Candles</div>
+      <h2 class="serif">소망 · 평화 · 기쁨 · 사랑</h2>
+    </div>
+    <div class="week-grid" id="weekGrid"></div>
+  </section>
+
+  <section class="daily-section wrap">
+    <div class="section-head">
+      <div class="kicker">Daily</div>
+      <h2 class="serif">매일 묵상 · 질문 나눔</h2>
+    </div>
+    <div class="daily-note">주차와 요일로 구성되어 있어, 대림절이 시작되는 날짜가 매년 달라져도 그대로 재사용할 수 있습니다.</div>
+    <div class="week-tabstrip" id="dailyWeekTabs"></div>
+    <div class="day-pillrow" id="dailyDayPills"></div>
+    <div class="daily-card" id="dailyCard"></div>
+  </section>
+
+  <section class="stickers-section wrap">
+    <div class="section-head">
+      <div class="kicker">Collection</div>
+      <h2 class="serif">모아가는 이야기</h2>
+    </div>
+    <div class="sticker-rack" id="stickerRack"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="links"><a href="gratitude.html">감사 저니 보러가기 →</a></div>
+  <div>이 페이지는 이 브라우저에만 진행 상황을 저장합니다 · 기독교교육리더십연구소</div>
+  <button class="reset" id="resetBtn">진행 상황 초기화</button>
+</footer>
+
+<div class="overlay" id="overlay" role="dialog" aria-modal="true">
+  <div class="envelope-wrap" id="envelopeWrap">
+    <button class="overlay-close" id="overlayClose" aria-label="닫기">&times;</button>
+    <div class="overlay-tag" id="overlayTag">1주 · 소망</div>
+
+    <div class="overlay-lock-note" id="overlayLockNote"></div>
+
+    <div class="envelope-stage" id="envelopeStage">
+      <div class="card-slide">
+        <div class="verse serif" id="overlayVerse"></div>
+        <div class="question" id="overlayQuestion"></div>
+      </div>
+      <div class="envelope-body"></div>
+      <div class="seal">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 0C12 6 18 12 24 12C18 12 12 18 12 24C12 18 6 12 0 12C6 12 12 6 12 0Z" fill="#F0D98A"/>
+        </svg>
+      </div>
+      <div class="envelope-flap"></div>
+      <div class="stamp-glow" id="stampGlow" aria-hidden="true"></div>
+      <div class="stamp-fx" id="stampFx" aria-hidden="true">
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+          <circle cx="32" cy="32" r="30" fill="#0A1120" stroke="#D9B94A" stroke-width="3"/>
+          <circle cx="32" cy="32" r="23" fill="none" stroke="#D9B94A" stroke-width="1.5" stroke-dasharray="3 4"/>
+          <path d="M20 33L28 41L45 22" stroke="#D9B94A" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="envelope-hint" id="envelopeHint">봉투를 눌러 이번 주 말씀을 열어보세요</div>
+    <div class="overlay-actions">
+      <button class="btn" id="openEnvelopeBtn">봉투 열기</button>
+      <button class="btn gold" id="stampBtn" style="display:none;">완료 스탬프 찍기</button>
+      <button class="undo-link" id="undoBtn" style="display:none;">완료 취소</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var STORAGE_KEY = "adventJourney2026.v1";
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var WEEKS = [
+    { id:"w1", no:1, theme:"소망", color:"var(--hope)", raw:"#6E8FD1",
+      devotional:"이사야가 예언한 빛, 그 소망을 기다리며",
+      mission:"새해를 향한 소망 한 가지를 적어 나누기",
+      verse:"“백성이 흑암에 행하다가 큰 빛을 보고” — 이사야 9:2",
+      question:"올 한 해, 내가 가장 기다렸던 순간은 언제였나요?" },
+    { id:"w2", no:2, theme:"평화", color:"var(--peace)", raw:"#9A83CE",
+      devotional:"한 해 관계 속에서 화해와 평화를 돌아보며",
+      mission:"화해하고 싶은 사람에게 짧은 안부 전하기",
+      verse:"“그는 우리의 화평이신지라” — 에베소서 2:14",
+      question:"올 한 해, 누구와의 관계에 평화가 필요했나요?" },
+    { id:"w3", no:3, theme:"기쁨", color:"var(--joy)", raw:"#D98CA6",
+      devotional:"한 해의 감사와 기쁨의 순간을 기억하며",
+      mission:"이번 주 있었던 작은 기쁨 하나를 나누기",
+      verse:"“항상 기뻐하라” — 데살로니가전서 5:16",
+      question:"올 한 해 가장 기뻤던 순간은 언제였나요?" },
+    { id:"w4", no:4, theme:"사랑", color:"var(--love)", raw:"#C9515C",
+      devotional:"성탄의 사랑(성육신)을 통해 이웃 사랑을 다짐하며",
+      mission:"이웃에게 작은 사랑을 실천하기로 다짐하기",
+      verse:"“하나님이 세상을 이처럼 사랑하사” — 요한복음 3:16",
+      question:"올해 내가 실천하고 싶은 사랑은 무엇인가요?" }
+  ];
+
+  var STICKERS = [
+    { id:"cw1", label:"소망 촛불", unlock:function(s){ return s.w1; }, svg:candleSvg("#6E8FD1") },
+    { id:"cw2", label:"평화 촛불", unlock:function(s){ return s.w2; }, svg:candleSvg("#9A83CE") },
+    { id:"cw3", label:"기쁨 촛불", unlock:function(s){ return s.w3; }, svg:candleSvg("#D98CA6") },
+    { id:"cw4", label:"사랑 촛불", unlock:function(s){ return s.w4; }, svg:candleSvg("#C9515C") },
+    { id:"star", label:"별", unlock:function(s){ return count(s) >= 1; }, svg:starSvg() },
+    { id:"holly", label:"감사", unlock:function(s){ return count(s) >= 3; }, svg:hollySvg() },
+    { id:"ornament", label:"성탄", unlock:function(s){ return count(s) >= 4; }, svg:ornamentSvg() },
+    { id:"ribbon", label:"완주", unlock:function(s){ return count(s) >= 4; }, svg:ribbonSvg() }
+  ];
+
+  function count(s){ return ["w1","w2","w3","w4"].filter(function(k){ return s[k]; }).length; }
+  function unlockedIds(s){ return STICKERS.filter(function(st){ return st.unlock(s); }).map(function(st){ return st.id; }); }
+
+  // ---------- Daily content: indexed by "week + day-of-week", not by calendar date ----------
+  // 매년 아래 한 줄(그 해 대림절 첫 주일 날짜)만 바꾸면, 나머지 요일·주차 콘텐츠는 그대로 재사용됩니다.
+  var ADVENT_START = "2026-11-29";
+
+  function parseISODate(iso){
+    var p = iso.split("-").map(Number);
+    return new Date(p[0], p[1] - 1, p[2]);
+  }
+  function addDays(date, n){
+    var d = new Date(date.getTime());
+    d.setDate(d.getDate() + n);
+    return d;
+  }
+  function stripTime(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(); }
+  function daysBetween(a, b){ return Math.round((stripTime(b) - stripTime(a)) / 86400000); }
+
+  var DOW_LABELS = ["일", "월", "화", "수", "목", "금", "토"];
+  var adventStartDate = parseISODate(ADVENT_START);
+  var christmasEve = new Date(adventStartDate.getFullYear(), 11, 24);
+  var week4StartDate = addDays(adventStartDate, 21);
+  // 대림절 마지막 주(4주차)는 성탄전야(12/24)에 맞춰 길이가 매년 달라짐(보통 1~7일) — 나머지 1~3주차는 항상 7일 고정
+  var week4Length = Math.max(1, Math.min(7, daysBetween(week4StartDate, christmasEve) + 1));
+  var WEEK_LENGTHS = { w1: 7, w2: 7, w3: 7, w4: week4Length };
+
+  function weekStartDate(weekNo){ return addDays(adventStartDate, (weekNo - 1) * 7); }
+
+  function todayInfo(){
+    var offset = daysBetween(adventStartDate, new Date());
+    if (offset < 0 || offset >= 21 + week4Length) return null;
+    var weekNo = Math.min(4, Math.floor(offset / 7) + 1);
+    var dayIndex = weekNo === 4 ? (offset - 21) : (offset % 7);
+    return { weekNo: weekNo, dayIndex: dayIndex };
+  }
+
+  // Spoiler-lock rules: only enforced while we're actually inside the live Advent
+  // season (today !== null) — before/after the season there's nothing to "peek ahead"
+  // of, so browsing stays free (this is also what lets the team preview every week
+  // year-round without a special toggle). Past and today are always open; only the
+  // future is locked, so missing a day never blocks catching up later.
+  function isWeekLocked(weekNo){
+    return !!today && weekNo > today.weekNo;
+  }
+  function isDayLocked(weekNo, dayIndex){
+    if (!today) return false;
+    if (weekNo !== today.weekNo) return weekNo > today.weekNo;
+    return dayIndex > today.dayIndex;
+  }
+  function formatMonthDay(d){ return (d.getMonth() + 1) + "월 " + d.getDate() + "일"; }
+  function lockSvg(){
+    return '<svg width="26" height="30" viewBox="0 0 26 30" fill="none" aria-hidden="true">' +
+      '<rect x="3" y="13" width="20" height="15" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>' +
+      '<path d="M8 13V8a5 5 0 0 1 10 0v5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+      '<circle cx="13" cy="20" r="2.2" fill="currentColor"/></svg>';
+  }
+
+  // 1주차(소망)는 실제 콘텐츠 예시로 채워두었고, 2~4주차는 팀에서 채울 자리표시자입니다.
+  var DAILY = {
+    w1: [
+      { kind:"devotional", verse:"“여호와는 나의 빛이요 나의 구원이시니 내가 누구를 두려워하리요” — 시편 27:1", text:"빛 되신 주님을 오늘 하루의 첫 마음에 모셔봅니다." },
+      { kind:"question", text:"이번 주, 내가 가장 기다리고 있는 일은 무엇인가요?" },
+      { kind:"devotional", verse:"“어둠이 빛을 이기지 못하더라” — 요한복음 1:5", text:"오늘 하루 중 가장 어두웠던 순간에도 빛이 있었음을 떠올려봅니다." },
+      { kind:"question", text:"지금 내가 기다림 중에 있다면, 그 기다림은 무엇을 위한 것인가요?" },
+      { kind:"devotional", verse:"“마음이 상한 자를 고치시며” — 시편 147:3", text:"소망은 아직 이루어지지 않은 것을 향한 믿음입니다." },
+      { kind:"question", text:"올해, 하나님께서 나에게 소망을 주셨던 순간이 있었나요?" },
+      { kind:"devotional", verse:"“소망 중에 즐거워하며” — 로마서 12:12", text:"내일 주일, 함께 모여 이 소망을 나눠봅니다." }
+    ],
+    w2: [0,1,2,3,4,5,6].map(function(){ return { kind:"draft" }; }),
+    w3: [0,1,2,3,4,5,6].map(function(){ return { kind:"draft" }; }),
+    w4: [0,1,2,3,4,5,6].map(function(){ return { kind:"draft" }; })
+  };
+
+  function candleSvg(color){
+    return '<svg width="20" height="34" viewBox="0 0 28 46" fill="none" aria-hidden="true">' +
+      '<rect x="9" y="10" width="10" height="32" rx="2" fill="'+color+'"/>' +
+      '<ellipse cx="14" cy="42" rx="12" ry="3" fill="rgba(0,0,0,0.18)"/>' +
+      '<path class="flame" d="M14 10C14 10 10 6 14 1C18 6 14 10 14 10Z" fill="#E8B84B"/></svg>';
+  }
+  function starSvg(){
+    return '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+      '<path d="M12 0C12 6 18 12 24 12C18 12 12 18 12 24C12 18 6 12 0 12C6 12 12 6 12 0Z" fill="#D9B94A"/></svg>';
+  }
+  function hollySvg(){
+    return '<svg width="28" height="18" viewBox="0 0 40 26" fill="none" aria-hidden="true">' +
+      '<path d="M2 13C10 2 20 2 20 2C20 2 30 2 38 13C30 24 20 24 20 24C20 24 10 24 2 13Z" fill="#5E9468"/>' +
+      '<circle cx="20" cy="13" r="3" fill="#C9515C"/><circle cx="14" cy="10" r="2.3" fill="#C9515C"/><circle cx="26" cy="10" r="2.3" fill="#C9515C"/></svg>';
+  }
+  function ornamentSvg(){
+    return '<svg width="24" height="28" viewBox="0 0 30 36" fill="none" aria-hidden="true">' +
+      '<rect x="12" y="0" width="6" height="6" fill="#D9C48C"/><circle cx="15" cy="20" r="14" fill="#C9515C"/>' +
+      '<path d="M8 14C12 10 18 10 22 14" stroke="#D9C48C" stroke-width="2" fill="none"/></svg>';
+  }
+  function ribbonSvg(){
+    return '<svg width="30" height="20" viewBox="0 0 60 40" fill="none" aria-hidden="true">' +
+      '<rect x="2" y="2" width="56" height="36" rx="18" fill="#16223A"/>' +
+      '<path d="M18 20L26 28L42 12" stroke="#D9B94A" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  }
+
+  var state = { w1:false, w2:false, w3:false, w4:false, daily:{} };
+  try {
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      var parsed = JSON.parse(saved);
+      state = Object.assign(state, parsed);
+      state.daily = Object.assign({}, parsed.daily || {});
+    }
+  } catch(e) { /* storage unavailable — continue with in-memory state */ }
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) { /* ignore */ }
+  }
+
+  var weekGrid = document.getElementById("weekGrid");
+  var miniCandles = document.getElementById("miniCandles");
+  var progressLabel = document.getElementById("progressLabel");
+  var stickerRack = document.getElementById("stickerRack");
+
+  function renderMiniCandles(){
+    miniCandles.innerHTML = "";
+    WEEKS.forEach(function(w){
+      var d = document.createElement("div");
+      d.className = "mini-candle" + (state[w.id] ? " lit" : "");
+      d.style.color = w.raw;
+      if (state[w.id]) d.style.background = w.raw;
+      miniCandles.appendChild(d);
+    });
+  }
+
+  function renderProgress(){
+    progressLabel.textContent = count(state) + " / 4주 완료";
+  }
+
+  function renderWeeks(){
+    weekGrid.innerHTML = "";
+    WEEKS.forEach(function(w){
+      var done = !!state[w.id];
+      var locked = isWeekLocked(w.no);
+      var card = document.createElement("div");
+      card.className = "week-card" + (done ? " done" : "") + (locked ? " locked" : "");
+      card.style.setProperty("--week-color", w.color);
+      if (locked) {
+        card.innerHTML =
+          '<div class="candle-badge">' + candleSvg(w.raw) + '</div>' +
+          '<div class="week-tag">' + w.no + '주 · ' + w.theme + '</div>' +
+          '<div class="week-lock-note">' + formatMonthDay(weekStartDate(w.no)) + '에 열려요</div>' +
+          '<button class="btn" data-week="' + w.id + '">아직 열리지 않았어요</button>';
+      } else {
+        card.innerHTML =
+          '<div class="candle-badge">' + candleSvg(w.raw) + '</div>' +
+          '<div class="week-tag">' + w.no + '주 · ' + w.theme + '</div>' +
+          '<div class="week-devotional serif">' + w.devotional + '</div>' +
+          '<div class="week-mission">' + w.mission + '</div>' +
+          '<div class="week-status' + (done ? ' done' : '') + '"><span class="dot"></span>' + (done ? '완료' : '미완료') + '</div>' +
+          '<button class="btn" data-week="' + w.id + '">봉투 열어보기</button>';
+      }
+      weekGrid.appendChild(card);
+    });
+    Array.prototype.forEach.call(weekGrid.querySelectorAll("[data-week]"), function(btn){
+      btn.addEventListener("click", function(){ openWeek(btn.getAttribute("data-week")); });
+    });
+  }
+
+  var stickerEls = {};
+  function buildStickerRack(){
+    stickerRack.innerHTML = "";
+    STICKERS.forEach(function(s){
+      var el = document.createElement("div");
+      el.className = "sticker-slot";
+      el.innerHTML =
+        '<div class="sticker-icon">' + s.svg + '</div>' +
+        '<div class="sticker-mask"></div>' +
+        '<div class="sticker-shine"></div>';
+      el.title = "잠김";
+      stickerRack.appendChild(el);
+      stickerEls[s.id] = el;
+    });
+  }
+
+  // skipIds: sticker ids to leave untouched (used to hold a sticker "locked-looking"
+  // until its scroll-into-view reveal moment, see revealStickers()).
+  function renderStickers(skipIds){
+    skipIds = skipIds || [];
+    STICKERS.forEach(function(s){
+      if (skipIds.indexOf(s.id) !== -1) return;
+      var el = stickerEls[s.id];
+      if (!el) return;
+      var unlocked = s.unlock(state);
+      el.classList.toggle("unlocked", unlocked);
+      el.title = unlocked ? s.label : "잠김";
+    });
+  }
+
+  function scrollToStickers(){
+    var target = document.querySelector(".stickers-section");
+    if (!target) return;
+    target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+  }
+
+  // Plays the "색칠" reveal (soft dissolve + glow) on specific stickers, staggered.
+  function revealStickers(ids){
+    (ids || []).forEach(function(id, i){
+      window.setTimeout(function(){
+        var el = stickerEls[id];
+        var def = STICKERS.filter(function(s){ return s.id === id; })[0];
+        if (!el || !def) return;
+        el.classList.remove("revealing");
+        void el.offsetWidth; // force reflow so the reveal animation can replay
+        el.classList.add("unlocked", "revealing");
+        el.title = def.label;
+      }, i * 320);
+    });
+  }
+
+  function renderAll(skipStickerIds){
+    renderMiniCandles();
+    renderProgress();
+    renderWeeks();
+    renderStickers(skipStickerIds);
+    renderDaily();
+  }
+
+  // ---------- Daily: week tabs + day pills + content card ----------
+  var dailyWeekTabs = document.getElementById("dailyWeekTabs");
+  var dailyDayPills = document.getElementById("dailyDayPills");
+  var dailyCard = document.getElementById("dailyCard");
+  var today = todayInfo();
+  var selectedWeek = today ? today.weekNo : 1;
+  var selectedDay = today ? today.dayIndex : 0;
+
+  function dayKey(weekNo, dayIndex){ return "w" + weekNo + "-" + dayIndex; }
+
+  function renderDaily(){
+    var weekColor = (WEEKS.filter(function(w){ return w.no === selectedWeek; })[0] || {}).color;
+    dailyWeekTabs.style.setProperty("--week-color", weekColor);
+    dailyDayPills.style.setProperty("--week-color", weekColor);
+
+    // week tabs
+    dailyWeekTabs.innerHTML = "";
+    [1,2,3,4].forEach(function(w){
+      var b = document.createElement("button");
+      b.className = "week-tab" + (w === selectedWeek ? " active" : "") + (isWeekLocked(w) ? " locked" : "");
+      b.textContent = w + "주";
+      b.addEventListener("click", function(){
+        selectedWeek = w;
+        selectedDay = 0;
+        renderDaily();
+      });
+      dailyWeekTabs.appendChild(b);
+    });
+
+    // day pills
+    var weekId = "w" + selectedWeek;
+    var len = WEEK_LENGTHS[weekId];
+    var startDate = weekStartDate(selectedWeek);
+    dailyDayPills.innerHTML = "";
+    for (var i = 0; i < len; i++){
+      (function(i){
+        var dow = addDays(startDate, i).getDay();
+        var done = !!state.daily[dayKey(selectedWeek, i)];
+        var isToday = today && today.weekNo === selectedWeek && today.dayIndex === i;
+        var locked = isDayLocked(selectedWeek, i);
+        var pill = document.createElement("button");
+        pill.className = "day-pill" + (i === selectedDay ? " active" : "") + (done ? " done" : "") + (locked ? " locked" : "");
+        pill.innerHTML = DOW_LABELS[dow] +
+          (isToday ? '<span class="today-dot" title="오늘"></span>' : "") +
+          (locked ? '<span class="lock-mark">' + lockSvg() + '</span>' : "");
+        pill.addEventListener("click", function(){ selectedDay = i; renderDaily(); });
+        dailyDayPills.appendChild(pill);
+      })(i);
+    }
+
+    // content card
+    var key = dayKey(selectedWeek, selectedDay);
+    var realDate = addDays(startDate, selectedDay);
+
+    if (isDayLocked(selectedWeek, selectedDay)) {
+      dailyCard.className = "daily-card locked";
+      dailyCard.innerHTML =
+        '<div class="daily-kind">' + selectedWeek + '주 · ' + DOW_LABELS[realDate.getDay()] + '요일</div>' +
+        '<div class="daily-lock-icon">' + lockSvg() + '</div>' +
+        '<div class="daily-lock-title">아직 열리지 않았어요</div>' +
+        '<div class="daily-lock-note">' + formatMonthDay(realDate) + '에 열려요</div>';
+      return;
+    }
+
+    var entry = (DAILY[weekId] && DAILY[weekId][selectedDay]) || { kind:"draft" };
+    var done = !!state.daily[key];
+    dailyCard.className = "daily-card" + (entry.kind === "draft" ? " draft" : "");
+
+    if (entry.kind === "draft") {
+      dailyCard.innerHTML =
+        '<div class="daily-kind">' + selectedWeek + '주 · ' + DOW_LABELS[realDate.getDay()] + '요일</div>' +
+        '<div class="daily-draft-note">(묵상 · 질문 문구 작성 예정 — 팀에서 채워주세요)</div>';
+      return;
+    }
+
+    var kindLabel = entry.kind === "devotional" ? "오늘의 묵상" : "오늘의 질문";
+    var body = entry.kind === "devotional"
+      ? '<div class="daily-verse serif">' + entry.verse + '</div><div class="daily-text">' + entry.text + '</div>'
+      : '<div class="daily-text" style="margin-top:0;font-size:15px;color:var(--paper);">' + entry.text + '</div>';
+
+    dailyCard.innerHTML =
+      '<div class="daily-kind">' + kindLabel + '</div>' +
+      body +
+      '<div class="daily-toggle"><button class="btn' + (done ? ' gold' : '') + '" id="dailyToggleBtn">' + (done ? '오늘 묵상 완료' : '오늘 묵상 완료로 표시') + '</button></div>';
+
+    document.getElementById("dailyToggleBtn").addEventListener("click", function(){
+      state.daily[key] = !state.daily[key];
+      save();
+      renderDaily();
+    });
+  }
+
+  // ---------- Overlay ----------
+  var overlay = document.getElementById("overlay");
+  var envelopeWrap = document.getElementById("envelopeWrap");
+  var envelopeStage = document.getElementById("envelopeStage");
+  var overlayTag = document.getElementById("overlayTag");
+  var overlayLockNote = document.getElementById("overlayLockNote");
+  var overlayVerse = document.getElementById("overlayVerse");
+  var overlayQuestion = document.getElementById("overlayQuestion");
+  var envelopeHint = document.getElementById("envelopeHint");
+  var openEnvelopeBtn = document.getElementById("openEnvelopeBtn");
+  var stampBtn = document.getElementById("stampBtn");
+  var undoBtn = document.getElementById("undoBtn");
+  var stampFx = document.getElementById("stampFx");
+  var stampGlow = document.getElementById("stampGlow");
+  var currentWeek = null;
+  var activeStampTimers = [];
+  var undoArmed = false;
+  var undoArmTimer = null;
+
+  function clearStampTimers(){
+    activeStampTimers.forEach(function(t){ window.clearTimeout(t); });
+    activeStampTimers = [];
+  }
+
+  function disarmUndo(){
+    undoArmed = false;
+    window.clearTimeout(undoArmTimer);
+    undoBtn.classList.remove("armed");
+    undoBtn.textContent = "완료 취소";
+  }
+
+  // Completion sequence, in the order requested: stamp travels in → impact ("쾅") →
+  // wiggle → the envelope screen itself closes → page scrolls to the sticker rack →
+  // the newly-earned sticker(s) get their "색칠" (paint-reveal) animation.
+  function runStampSequence(newlyUnlocked){
+    clearStampTimers();
+    stampFx.classList.remove("enter", "impact", "settle", "resting");
+    stampGlow.classList.remove("burst");
+    envelopeStage.classList.remove("wiggle");
+    void stampFx.offsetWidth; // force reflow so the animation can replay
+
+    if (reduceMotion) {
+      envelopeWrap.classList.add("stamped");
+      stampFx.classList.add("resting");
+      overlay.classList.remove("open");
+      scrollToStickers();
+      revealStickers(newlyUnlocked);
+      return;
+    }
+
+    var FADE = 320, ENTER = 380, IMPACT = 300, FLASH = 260, SCROLL_WAIT = 900;
+    envelopeWrap.classList.add("stamped"); // envelope disappears
+
+    activeStampTimers.push(window.setTimeout(function(){
+      stampFx.classList.add("enter"); // stamp travels in
+    }, FADE));
+
+    activeStampTimers.push(window.setTimeout(function(){
+      stampFx.classList.add("impact"); // impact ("쾅")
+      envelopeStage.classList.add("wiggle"); // wiggle
+    }, FADE + ENTER));
+
+    activeStampTimers.push(window.setTimeout(function(){
+      envelopeStage.classList.remove("wiggle");
+      stampFx.classList.remove("impact");
+      stampFx.classList.add("settle");
+      stampGlow.classList.add("burst");
+    }, FADE + ENTER + IMPACT));
+
+    activeStampTimers.push(window.setTimeout(function(){
+      overlay.classList.remove("open"); // 봉투 화면 사라짐
+      scrollToStickers(); // 아래로 스크롤
+    }, FADE + ENTER + IMPACT + FLASH));
+
+    activeStampTimers.push(window.setTimeout(function(){
+      activeStampTimers = [];
+      revealStickers(newlyUnlocked); // 색칠 효과
+    }, FADE + ENTER + IMPACT + FLASH + SCROLL_WAIT));
+  }
+
+  function openWeek(id){
+    currentWeek = WEEKS.filter(function(w){ return w.id === id; })[0];
+    if (!currentWeek) return;
+    clearStampTimers();
+    disarmUndo();
+
+    overlayTag.textContent = currentWeek.no + "주 · " + currentWeek.theme;
+    overlayTag.parentElement.style.setProperty("--week-color", currentWeek.color);
+
+    if (isWeekLocked(currentWeek.no)) {
+      overlayLockNote.innerHTML =
+        '<div class="lock-icon">' + lockSvg() + '</div>' +
+        '<div class="lock-title">아직 열리지 않았어요</div>' +
+        '<div class="lock-sub">' + formatMonthDay(weekStartDate(currentWeek.no)) + '에 열려요</div>';
+      overlayLockNote.style.display = "flex";
+      envelopeStage.style.display = "none";
+      envelopeHint.style.display = "none";
+      openEnvelopeBtn.style.display = "none";
+      stampBtn.style.display = "none";
+      undoBtn.style.display = "none";
+      overlay.classList.add("open");
+      return;
+    }
+    overlayLockNote.style.display = "none";
+    envelopeStage.style.display = "";
+
+    overlayVerse.textContent = currentWeek.verse;
+    overlayQuestion.textContent = currentWeek.question;
+
+    // clear any leftover animation state from a previous viewing before reflecting current state
+    stampFx.classList.remove("enter", "impact", "settle", "resting");
+    stampGlow.classList.remove("burst");
+    envelopeStage.classList.remove("wiggle");
+    envelopeWrap.classList.remove("stamped");
+
+    var already = !!state[currentWeek.id];
+    envelopeWrap.classList.toggle("opened", already);
+
+    if (already) {
+      envelopeWrap.classList.add("stamped");
+      stampFx.classList.add("resting");
+      envelopeHint.style.display = "none";
+      openEnvelopeBtn.style.display = "none";
+      stampBtn.style.display = "none";
+      stampBtn.disabled = true;
+      undoBtn.style.display = "inline-block";
+      undoBtn.textContent = "완료 취소";
+    } else {
+      envelopeHint.style.display = "block";
+      openEnvelopeBtn.style.display = "inline-block";
+      stampBtn.style.display = "none"; // shown only after the envelope is opened
+      stampBtn.disabled = false;
+      stampBtn.textContent = "완료 스탬프 찍기";
+      undoBtn.style.display = "none";
+    }
+
+    overlay.classList.add("open");
+  }
+
+  openEnvelopeBtn.addEventListener("click", function(){
+    envelopeWrap.classList.add("opened");
+    envelopeHint.style.display = "none";
+    openEnvelopeBtn.style.display = "none";
+    stampBtn.style.display = "inline-block";
+  });
+
+  stampBtn.addEventListener("click", function(){
+    if (!currentWeek || stampBtn.disabled) return;
+    stampBtn.disabled = true;
+    stampBtn.style.display = "none";
+    envelopeHint.style.display = "none";
+    undoBtn.style.display = "none";
+
+    var beforeIds = unlockedIds(state);
+    state[currentWeek.id] = true;
+    save();
+    var newlyUnlocked = unlockedIds(state).filter(function(id){ return beforeIds.indexOf(id) === -1; });
+
+    renderAll(newlyUnlocked); // week card / progress / candles update now; new stickers stay hidden until reveal
+    runStampSequence(newlyUnlocked);
+  });
+
+  // Undo uses a "click again to confirm" pattern instead of window.confirm(), which
+  // some embedded/sandboxed views block silently.
+  undoBtn.addEventListener("click", function(){
+    if (!currentWeek) return;
+
+    if (!undoArmed) {
+      undoArmed = true;
+      undoBtn.textContent = "정말 취소할까요? (다시 클릭)";
+      undoBtn.classList.add("armed");
+      window.clearTimeout(undoArmTimer);
+      undoArmTimer = window.setTimeout(disarmUndo, 3000);
+      return;
+    }
+
+    disarmUndo();
+    clearStampTimers();
+    state[currentWeek.id] = false;
+    save();
+    renderAll();
+
+    stampFx.classList.remove("enter", "impact", "settle", "resting");
+    stampGlow.classList.remove("burst");
+    envelopeStage.classList.remove("wiggle");
+    envelopeWrap.classList.remove("stamped");
+    envelopeWrap.classList.add("opened"); // envelope stays open — the card was already read
+
+    envelopeHint.style.display = "none";
+    openEnvelopeBtn.style.display = "none";
+    stampBtn.style.display = "inline-block";
+    stampBtn.disabled = false;
+    stampBtn.textContent = "완료 스탬프 찍기";
+    undoBtn.style.display = "none";
+  });
+
+  document.getElementById("overlayClose").addEventListener("click", closeOverlay);
+  overlay.addEventListener("click", function(e){ if (e.target === overlay) closeOverlay(); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape") closeOverlay(); });
+
+  function closeOverlay(){
+    clearStampTimers();
+    renderStickers(); // safety net: if a reveal was interrupted mid-flight, snap all stickers to their true state
+    overlay.classList.remove("open");
+  }
+
+  // Reset also uses the "click again to confirm" pattern (see undo above).
+  var resetBtn = document.getElementById("resetBtn");
+  var resetArmed = false;
+  var resetArmTimer = null;
+  resetBtn.addEventListener("click", function(){
+    if (!resetArmed) {
+      resetArmed = true;
+      resetBtn.textContent = "정말 초기화할까요? (다시 클릭)";
+      resetBtn.classList.add("armed");
+      window.clearTimeout(resetArmTimer);
+      resetArmTimer = window.setTimeout(function(){
+        resetArmed = false;
+        resetBtn.classList.remove("armed");
+        resetBtn.textContent = "진행 상황 초기화";
+      }, 3000);
+      return;
+    }
+    resetArmed = false;
+    window.clearTimeout(resetArmTimer);
+    resetBtn.classList.remove("armed");
+    resetBtn.textContent = "진행 상황 초기화";
+    state = { w1:false, w2:false, w3:false, w4:false, daily:{} };
+    save();
+    renderAll();
+  });
+
+  buildStickerRack();
+  renderAll();
+})();
+</script>
+</body>
+</html>
