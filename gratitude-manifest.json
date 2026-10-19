@@ -1,0 +1,13 @@
+{
+  "name": "감사 저니",
+  "short_name": "감사저니",
+  "start_url": "./gratitude.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F8F1E0",
+  "theme_color": "#C9A227",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
