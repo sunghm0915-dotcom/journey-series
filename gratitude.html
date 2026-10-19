@@ -350,6 +350,27 @@
   footer .reset{margin-top:8px;display:inline-block;font-size:12px;color:var(--ink-dim);text-decoration:underline;background:none;border:none;}
   footer .reset:hover{color:var(--ink);}
   footer .reset.armed{color:var(--love);}
+  /* ---------- 홈 화면 추가 배너 ---------- */
+.install-banner{
+  position:fixed; left:16px; right:16px; bottom:16px;
+  max-width:460px; margin:0 auto;
+  background:var(--panel); border:1px solid var(--line-strong);
+  border-radius:16px; padding:16px 18px;
+  box-shadow:0 10px 30px rgba(74,46,30,0.18);
+  display:none; gap:12px; align-items:flex-start;
+  z-index:999;
+}
+.install-banner.show{ display:flex; }
+.install-banner img{ width:40px; height:40px; border-radius:10px; flex-shrink:0; }
+.install-banner-body{ flex:1; min-width:0; }
+.install-banner-title{ font-weight:700; font-size:14px; color:var(--ink); margin-bottom:4px; }
+.install-banner-desc{ font-size:12.5px; color:var(--ink-dim); line-height:1.5; }
+.install-banner-actions{ margin-top:10px; display:flex; gap:8px; }
+.install-banner-close{
+  background:none; border:none; color:var(--ink-dim); font-size:18px; line-height:1;
+  padding:4px; cursor:pointer; flex-shrink:0;
+}
+.install-banner-close:hover{ color:var(--ink); }
 </style>
   <!-- 홈 화면 추가 대응 -->
 <meta name="theme-color" content="#F8F1E0">
@@ -793,6 +814,71 @@
   });
 
   renderAll();
+})();
+</script>
+  <div class="install-banner" id="installBanner">
+  <img src="icon-192.png" alt="">
+  <div class="install-banner-body">
+    <div class="install-banner-title" id="installBannerTitle"></div>
+    <div class="install-banner-desc" id="installBannerDesc"></div>
+    <div class="install-banner-actions" id="installBannerActions"></div>
+  </div>
+  <button class="install-banner-close" id="installBannerClose" aria-label="닫기">×</button>
+</div>
+
+<script>
+(function(){
+  var DISMISS_KEY = "gratitudeJourney2026.installDismissed";
+  var banner = document.getElementById("installBanner");
+  var titleEl = document.getElementById("installBannerTitle");
+  var descEl = document.getElementById("installBannerDesc");
+  var actionsEl = document.getElementById("installBannerActions");
+  var closeBtn = document.getElementById("installBannerClose");
+
+  function isStandalone(){
+    return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone === true;
+  }
+  function isDismissed(){
+    try { return localStorage.getItem(DISMISS_KEY) === "1"; } catch(e){ return false; }
+  }
+  function dismiss(){
+    try { localStorage.setItem(DISMISS_KEY, "1"); } catch(e){}
+    banner.classList.remove("show");
+  }
+  closeBtn.addEventListener("click", dismiss);
+
+  if (isStandalone() || isDismissed()) return;
+
+  var ua = navigator.userAgent;
+  var isIOS = /iphone|ipad|ipod/i.test(ua) && !window.MSStream;
+
+  // 안드로이드(크롬/삼성인터넷): 실제 설치 버튼
+  var deferredPrompt = null;
+  window.addEventListener("beforeinstallprompt", function(e){
+    e.preventDefault();
+    deferredPrompt = e;
+    titleEl.textContent = "홈 화면에 추가하기";
+    descEl.textContent = "앱처럼 아이콘 하나로 바로 열 수 있어요.";
+    actionsEl.innerHTML = "";
+    var btn = document.createElement("button");
+    btn.className = "btn gold";
+    btn.textContent = "설치하기";
+    btn.addEventListener("click", function(){
+      banner.classList.remove("show");
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.finally(function(){ deferredPrompt = null; });
+    });
+    actionsEl.appendChild(btn);
+    banner.classList.add("show");
+  });
+
+  // iOS 사파리: 버튼으로 직접 설치는 불가, 안내만
+  if (isIOS){
+    titleEl.textContent = "홈 화면에 추가하기";
+    descEl.textContent = "하단 공유 버튼(⬆️)을 누른 뒤 '홈 화면에 추가'를 선택해보세요.";
+    actionsEl.innerHTML = "";
+    banner.classList.add("show");
+  }
 })();
 </script>
 </body>
