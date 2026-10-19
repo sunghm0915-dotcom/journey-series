@@ -531,7 +531,7 @@
     var cells = new Array(25);
     var p = 0;
     for (var i = 0; i < 25; i++){
-      if (i === 12) { cells[i] = { tier:"free", text:"자유 칸 — 오늘 떠오른 감사 한 가지를 적어보세요" }; continue; }
+      if (i === 12) { cells[i] = { tier:"free", text:"<자유 칸><br>오늘 떠오른 감사 한 가지를 적어보세요" }; continue; }
       var t = pattern[p++];
       if (t === "s") cells[i] = { tier:"surface", text: surface[si++] };
       else if (t === "d") cells[i] = { tier:"daily", text: daily[di++] };
