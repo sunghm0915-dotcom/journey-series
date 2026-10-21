@@ -592,7 +592,7 @@
     var cells = new Array(25);
     var p = 0;
     for (var i = 0; i < 25; i++){
-      if (i === 12) { cells[i] = { tier:"free", text:"자유 칸 — 나만의<br>감사 실천 하나를 해보세요" }; continue; }
+      if (i === 12) { cells[i] = { tier:"free", text:"<자유 칸><br>나만의<br>감사 실천<br>하나를 해보세요" }; continue; }
       var t = pattern[p++];
       if (t === "s") cells[i] = { tier:"surface", text: surface[si++] };
       else if (t === "d") cells[i] = { tier:"daily", text: daily[di++] };
