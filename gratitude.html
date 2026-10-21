@@ -743,7 +743,7 @@
     var cell = BINGO_CELLS[i];
     bingoDetailTag.textContent = TIER_LABEL[cell.tier];
     bingoDetailTag.style.setProperty("--tag-color", TIER_COLOR[cell.tier]);
-    bingoDetailText.textContent = cell.text;
+    bingoDetailText.textContent = cell.text.replace(/<br>/g, " ");
     if (i === 12) {
       bingoDetailToggle.textContent = "자유 칸은 항상 완성돼 있어요";
       bingoDetailToggle.disabled = true;
