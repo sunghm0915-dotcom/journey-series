@@ -14,10 +14,12 @@
     --paper-dim:#B7AD8C;
     --gold:#D9B94A;
     --gold-soft:#8C7A3E;
-    --hope:#6E8FD1;
-    --peace:#9A83CE;
+    /* 대림절 전통 전례색: 보라(1·2·4주, 진→연 그라데이션) + 장미/분홍(3주, 기쁨의 주일) */
+    --hope:#7C5BB0;
+    --peace:#8D6CC0;
     --joy:#D98CA6;
-    --love:#C9515C;
+    --love:#9B7FCC;
+    --alert:#C9515C;
     --line: rgba(241,231,201,0.14);
     --line-strong: rgba(241,231,201,0.28);
   }
@@ -237,7 +239,7 @@
   .seal{
     position:absolute;left:50%;top:80px;transform:translateX(-50%);
     width:38px;height:38px;border-radius:50%;
-    background:var(--love);
+    background:var(--alert);
     display:flex;align-items:center;justify-content:center;
     box-shadow:0 4px 10px rgba(0,0,0,0.35);
     z-index:4;
@@ -339,7 +341,7 @@
     text-decoration:underline;padding:2px;
   }
   .undo-link:hover{color:var(--paper);}
-  .undo-link.armed{color:var(--love);}
+  .undo-link.armed{color:var(--alert);}
 
   /* ---------- Stickers ---------- */
   .stickers-section{padding:56px 0 88px;}
@@ -483,7 +485,7 @@
   }
   footer .reset{margin-top:8px;display:inline-block;font-size:12px;color:var(--paper-dim);text-decoration:underline;background:none;border:none;}
   footer .reset:hover{color:var(--paper);}
-  footer .reset.armed{color:var(--love);}
+  footer .reset.armed{color:var(--alert);}
   footer .links{margin-bottom:6px;}
 </style>
 </head>
@@ -589,12 +591,12 @@
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   var WEEKS = [
-    { id:"w1", no:1, theme:"소망", color:"var(--hope)", raw:"#6E8FD1",
+    { id:"w1", no:1, theme:"소망", color:"var(--hope)", raw:"#7C5BB0",
       devotional:"이사야가 예언한 빛, 그 소망을 기다리며",
       mission:"새해를 향한 소망 한 가지를 적어 나누기",
       verse:"“백성이 흑암에 행하다가 큰 빛을 보고” — 이사야 9:2",
       question:"올 한 해, 내가 가장 기다렸던 순간은 언제였나요?" },
-    { id:"w2", no:2, theme:"평화", color:"var(--peace)", raw:"#9A83CE",
+    { id:"w2", no:2, theme:"평화", color:"var(--peace)", raw:"#8D6CC0",
       devotional:"한 해 관계 속에서 화해와 평화를 돌아보며",
       mission:"화해하고 싶은 사람에게 짧은 안부 전하기",
       verse:"“그는 우리의 화평이신지라” — 에베소서 2:14",
@@ -604,7 +606,7 @@
       mission:"이번 주 있었던 작은 기쁨 하나를 나누기",
       verse:"“항상 기뻐하라” — 데살로니가전서 5:16",
       question:"올 한 해 가장 기뻤던 순간은 언제였나요?" },
-    { id:"w4", no:4, theme:"사랑", color:"var(--love)", raw:"#C9515C",
+    { id:"w4", no:4, theme:"사랑", color:"var(--love)", raw:"#9B7FCC",
       devotional:"성탄의 사랑(성육신)을 통해 이웃 사랑을 다짐하며",
       mission:"이웃에게 작은 사랑을 실천하기로 다짐하기",
       verse:"“하나님이 세상을 이처럼 사랑하사” — 요한복음 3:16",
@@ -612,10 +614,10 @@
   ];
 
   var STICKERS = [
-    { id:"cw1", label:"소망 촛불", unlock:function(s){ return s.w1; }, svg:candleSvg("#6E8FD1") },
-    { id:"cw2", label:"평화 촛불", unlock:function(s){ return s.w2; }, svg:candleSvg("#9A83CE") },
+    { id:"cw1", label:"소망 촛불", unlock:function(s){ return s.w1; }, svg:candleSvg("#7C5BB0") },
+    { id:"cw2", label:"평화 촛불", unlock:function(s){ return s.w2; }, svg:candleSvg("#8D6CC0") },
     { id:"cw3", label:"기쁨 촛불", unlock:function(s){ return s.w3; }, svg:candleSvg("#D98CA6") },
-    { id:"cw4", label:"사랑 촛불", unlock:function(s){ return s.w4; }, svg:candleSvg("#C9515C") },
+    { id:"cw4", label:"사랑 촛불", unlock:function(s){ return s.w4; }, svg:candleSvg("#9B7FCC") },
     { id:"star", label:"별", unlock:function(s){ return count(s) >= 1; }, svg:starSvg() },
     { id:"holly", label:"감사", unlock:function(s){ return count(s) >= 3; }, svg:hollySvg() },
     { id:"ornament", label:"성탄", unlock:function(s){ return count(s) >= 4; }, svg:ornamentSvg() },
