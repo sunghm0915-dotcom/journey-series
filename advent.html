@@ -467,6 +467,7 @@
   .daily-card.draft{border-style:dashed;}
   .daily-card.locked{border-style:dashed;}
   .daily-kind{font-size:11.5px;letter-spacing:0.08em;color:var(--gold-soft);text-transform:uppercase;margin-bottom:10px;}
+  .daily-kind.mission{color:#8FB07F;}
   .daily-verse{font-family:"Noto Serif KR", serif;font-size:16px;line-height:1.7;color:var(--paper);}
   .daily-text{font-size:14px;color:var(--paper-dim);margin-top:10px;line-height:1.7;}
   .daily-draft-note{font-size:12.5px;color:var(--paper-dim);font-style:italic;margin-top:6px;}
@@ -594,7 +595,7 @@
     { id:"w1", no:1, theme:"소망", color:"var(--hope)", raw:"#7C5BB0",
       devotional:"이사야가 예언한 빛, 그 소망을 기다리며",
       mission:"새해를 향한 소망 한 가지를 적어 나누기",
-      verse:"“백성이 흑암에 행하다가 큰 빛을 보고” — 이사야 9:2",
+      verse:"“흑암에 행하던 백성이 큰 빛을 보고” — 이사야 9:2",
       question:"올 한 해, 내가 가장 기다렸던 순간은 언제였나요?" },
     { id:"w2", no:2, theme:"평화", color:"var(--peace)", raw:"#8D6CC0",
       devotional:"한 해 관계 속에서 화해와 평화를 돌아보며",
@@ -603,7 +604,7 @@
       question:"올 한 해, 누구와의 관계에 평화가 필요했나요?" },
     { id:"w3", no:3, theme:"기쁨", color:"var(--joy)", raw:"#D98CA6",
       devotional:"한 해의 감사와 기쁨의 순간을 기억하며",
-      mission:"이번 주 있었던 작은 기쁨 하나를 나누기",
+      mission:"한 사람에게 “내가 본 너의 좋은 점” 한 줄 보내고, 나의 좋은 점도 하나 들어보기",
       verse:"“항상 기뻐하라” — 데살로니가전서 5:16",
       question:"올 한 해 가장 기뻤던 순간은 언제였나요?" },
     { id:"w4", no:4, theme:"사랑", color:"var(--love)", raw:"#9B7FCC",
@@ -648,7 +649,9 @@
   var christmasEve = new Date(adventStartDate.getFullYear(), 11, 24);
   var week4StartDate = addDays(adventStartDate, 21);
   // 대림절 마지막 주(4주차)는 성탄전야(12/24)에 맞춰 길이가 매년 달라짐(보통 1~7일) — 나머지 1~3주차는 항상 7일 고정
-  var week4Length = Math.max(1, Math.min(7, daysBetween(week4StartDate, christmasEve) + 1));
+  // 4주차는 성탄절(12/25, 그리스도의 초)까지 포함 — 스탬프북 4주차(DAY1~5 + 성탄)와 맞춤
+  var christmasDay = addDays(christmasEve, 1);
+  var week4Length = Math.max(1, Math.min(7, daysBetween(week4StartDate, christmasDay) + 1));
   var WEEK_LENGTHS = { w1: 7, w2: 7, w3: 7, w4: week4Length };
 
   function weekStartDate(weekNo){ return addDays(adventStartDate, (weekNo - 1) * 7); }
@@ -687,15 +690,39 @@
     w1: [
       { kind:"devotional", verse:"“여호와는 나의 빛이요 나의 구원이시니 내가 누구를 두려워하리요” — 시편 27:1", text:"빛 되신 주님을 오늘 하루의 첫 마음에 모셔봅니다." },
       { kind:"question", text:"이번 주, 내가 가장 기다리고 있는 일은 무엇인가요?" },
-      { kind:"devotional", verse:"“어둠이 빛을 이기지 못하더라” — 요한복음 1:5", text:"오늘 하루 중 가장 어두웠던 순간에도 빛이 있었음을 떠올려봅니다." },
+      { kind:"devotional", verse:"“빛이 어둠에 비치되 어둠이 깨닫지 못하더라” — 요한복음 1:5", text:"‘비치되’는 원문에서 지금도 계속 비춘다는 현재형입니다. 이 빛은 해나 등불이 아닌 하나님의 영광, 말씀이신 그리스도의 빛입니다. 어둠은 빛의 부재일 뿐, 그 빛을 붙잡지도 이기지도 못합니다. 가장 어두웠다고 느껴지는 순간에도 그 빛은 나를 비추고 있습니다." },
       { kind:"question", text:"지금 내가 기다림 중에 있다면, 그 기다림은 무엇을 위한 것인가요?" },
-      { kind:"devotional", verse:"“마음이 상한 자를 고치시며” — 시편 147:3", text:"소망은 아직 이루어지지 않은 것을 향한 믿음입니다." },
+      { kind:"devotional", verse:"“보이는 소망이 소망이 아니니 보는 것을 누가 바라리요” — 로마서 8:24", text:"소망은 아직 이루어지지 않은 것을 향한 믿음입니다." },
       { kind:"question", text:"올해, 하나님께서 나에게 소망을 주셨던 순간이 있었나요?" },
       { kind:"devotional", verse:"“소망 중에 즐거워하며” — 로마서 12:12", text:"내일 주일, 함께 모여 이 소망을 나눠봅니다." }
     ],
-    w2: [0,1,2,3,4,5,6].map(function(){ return { kind:"draft" }; }),
-    w3: [0,1,2,3,4,5,6].map(function(){ return { kind:"draft" }; }),
-    w4: [0,1,2,3,4,5,6].map(function(){ return { kind:"draft" }; })
+    w2: [
+      {"kind": "devotional", "verse": "“그리스도의 평강이 너희 마음을 주장하게 하라” — 골로새서 3:15", "text": "이번 주, 화해와 평화라는 주제로 한 주를 시작합니다."},
+      {"kind": "question", "text": "요즘 내 마음에는 평안이 얼마나 머물러 있나요? 0부터 10까지 점수를 매긴다면 몇 점일까요? 그 점수의 이유와, 1점을 더 올려줄 수 있는 것을 떠올려보세요."},
+      {"kind": "devotional", "verse": "“평안을 너희에게 끼치노니 곧 나의 평안을 너희에게 주노라 내가 너희에게 주는 것은 세상이 주는 것과 같지 아니하니라” — 요한복음 14:27", "text": "예수님은 십자가를 앞둔 밤에 이 평안을 약속하셨습니다. 세상이 주는 평안은 상황이 좋을 때 머물다 상황이 바뀌면 떠나지만, 주님의 평안은 상황에 기대지 않습니다. 어떤 형편에서도 주님 안의 안전함이 나를 가득 채웁니다."},
+      {"kind": "question", "text": "화해가 어려운 이유는 갈등 자체보다 자존심 때문일 때가 많습니다. 지금 내가 지키고 있는 자존심은 무엇인가요?"},
+      {"kind": "mission", "text": "화해하고 싶은 사람에게 짧은 안부 전하기"},
+      {"kind": "devotional", "verse": "“모든 지각에 뛰어난 하나님의 평강이 그리스도 예수 안에서 너희 마음과 생각을 지키시리라” — 빌립보서 4:7", "text": "염려 대신 기도를 선택할 때, 하나님의 평강이 내 마음을 지키십니다."},
+      {"kind": "devotional", "verse": "“화평하게 하는 자는 복이 있나니” — 마태복음 5:9", "text": "내일 주일, 우리는 화평하게 하는 자로 살아가는 것에 대해 함께 나눕니다."}
+    ],
+    w3: [
+      {"kind": "devotional", "verse": "“주의 앞에는 충만한 기쁨이 있고” — 시편 16:11", "text": "이번 주, 기쁨이라는 주제로 한 주를 시작합니다. 기쁨은 상황이 아니라 주님 앞에 있을 때 주어집니다."},
+      {"kind": "question", "text": "요즘 나는 무엇 때문에 기뻐하고, 무엇 때문에 기쁨을 잃나요?"},
+      {"kind": "devotional", "verse": "“여호와로 인하여 기뻐하는 것이 너희의 힘이니라” — 느헤미야 8:10", "text": "내 힘으로 버티는 하루가 아니라, 주님으로 인한 기쁨이 힘이 되는 하루를 구해봅니다."},
+      {"kind": "question", "text": "기쁨을 잃게 만드는 것은 큰 사건보다 비교일 때가 많습니다. 남과 비교하느라 나는 나의 어떤 모습을 작게 여기고, 내 삶의 어떤 기쁨을 놓치고 있었나요?"},
+      {"kind": "mission", "text": "가까운 사람 한 명을 정해, 그에게서 본 좋은 점 하나를 문자나 쪽지 한 줄로 전해보세요. 용기가 나면 “너는 나의 어떤 점이 좋아?”도 하나 물어보세요.<br><br>예) “늘 먼저 안부 물어줘서 고마워. 그게 네 좋은 점이야.”"},
+      {"kind": "devotional", "verse": "“나는 여호와로 말미암아 즐거워하며 나의 구원의 하나님으로 말미암아 기뻐하리로다” — 하박국 3:18", "text": "무화과나무에 열매가 없어도 — 상황이 채워지지 않아도 드릴 수 있는 기쁨을 묵상합니다."},
+      {"kind": "devotional", "verse": "“우리가 사랑함은 그가 먼저 우리를 사랑하셨음이라” — 요한일서 4:19", "text": "이번 주 발견한 기쁨을 품고, 내일 주일에는 마지막 촛불인 사랑의 초를 함께 밝힙니다."}
+    ],
+    w4: [
+      {"kind": "devotional", "verse": "“하나님은 사랑이시라” — 요한일서 4:16", "text": "대림절의 마지막 주, 사랑이라는 주제로 시작합니다. 우리가 기다려온 분은 사랑 그 자체이십니다."},
+      {"kind": "question", "text": "올 한 해, 나는 누구에게서 사랑을 받았고, 누구에게 사랑을 흘려보냈나요?"},
+      {"kind": "devotional", "verse": "“사랑은 오래 참고 사랑은 온유하며” — 고린도전서 13:4", "text": "바울이 사랑을 설명하며 가장 먼저 꺼낸 말은 ‘오래 참음’과 ‘온유함’이었습니다. 사랑은 상대를 서두르지 않고 기다려주며, 그 기다림을 부드럽게 품는 마음입니다. 하나님도 그렇게 오래 참으시며 우리를 기다려 오셨습니다."},
+      {"kind": "question", "text": "사랑하기 가장 어려운 사람은 멀리 있는 사람이 아니라 가까이 있는 사람일 때가 많습니다. 지금 내가 사랑을 미루고 있는 사람은 누구인가요?"},
+      {"kind": "mission", "text": "이웃에게 작은 사랑을 실천하기로 다짐하기"},
+      {"kind": "devotional", "verse": "“오늘 다윗의 동네에 너희를 위하여 구주가 나셨으니 곧 그리스도 주시니라” — 누가복음 2:11", "text": "기다림이 끝났습니다. 그리스도의 초를 밝히며, 우리 가운데 오신 빛을 맞이합니다."},
+      {"kind": "question", "text": "네 주의 기다림을 돌아볼 때, 내 안에 가장 크게 남은 것은 소망·평화·기쁨·사랑 중 무엇인가요?"}
+    ]
   };
 
   function candleSvg(color){
@@ -922,15 +949,15 @@
       return;
     }
 
-    var kindLabel = entry.kind === "devotional" ? "오늘의 묵상" : "오늘의 질문";
+    var kindLabel = entry.kind === "devotional" ? "오늘의 묵상" : (entry.kind === "mission" ? "오늘의 미션" : "오늘의 질문");
     var body = entry.kind === "devotional"
       ? '<div class="daily-verse serif">' + entry.verse + '</div><div class="daily-text">' + entry.text + '</div>'
       : '<div class="daily-text" style="margin-top:0;font-size:15px;color:var(--paper);">' + entry.text + '</div>';
 
     dailyCard.innerHTML =
-      '<div class="daily-kind">' + kindLabel + '</div>' +
+      '<div class="daily-kind' + (entry.kind === "mission" ? ' mission' : '') + '">' + kindLabel + '</div>' +
       body +
-      '<div class="daily-toggle"><button class="btn' + (done ? ' gold' : '') + '" id="dailyToggleBtn">' + (done ? '오늘 묵상 완료' : '오늘 묵상 완료로 표시') + '</button></div>';
+      '<div class="daily-toggle"><button class="btn' + (done ? ' gold' : '') + '" id="dailyToggleBtn">' + (entry.kind === "mission" ? (done ? '오늘 미션 완료' : '오늘 미션 완료로 표시') : (done ? '오늘 묵상 완료' : '오늘 묵상 완료로 표시')) + '</button></div>';
 
     document.getElementById("dailyToggleBtn").addEventListener("click", function(){
       state.daily[key] = !state.daily[key];
